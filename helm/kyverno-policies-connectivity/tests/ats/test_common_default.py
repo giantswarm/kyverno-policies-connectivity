@@ -11,12 +11,16 @@ from textwrap import dedent
 
 from ensure import release
 from ensure import cluster
-from ensure import awscluster_v1alpha3
-from ensure import awscluster_v1alpha3_empty
-from ensure import awscluster_v1alpha3_empty_labeled
-from ensure import awsclusterroleidentity
-from ensure import awsmachinetemplate
-from ensure import awsmachinepool
+from ensure import machinedeployment
+from ensure import kubeadmconfig
+from ensure import kubeadmconfig_controlplane
+from ensure import kubeadmconfig_with_labels
+from ensure import kubeadmconfig_with_role_labels
+from ensure import kubeadmconfig_with_kubelet_args
+from ensure import kubeadm_control_plane
+from ensure import kubeadmconfig_controlplane
+from ensure import kubeadmconfig_with_files
+from ensure import kubeadmconfig_with_audit_file
 
 import pytest
 from pytest_kube import forward_requests, wait_for_rollout, app_template
@@ -24,77 +28,35 @@ from pytest_kube import forward_requests, wait_for_rollout, app_template
 import logging
 LOGGER = logging.getLogger(__name__)
 
+@pytest.mark.smoke
+def test_kubeadmconfig_policy_controlplane(kubeadmconfig_controlplane) -> None:
+    """
+    test_kubeadmconfig_policy_controlplane tests defaulting of a KubeadmConfig for a control plane where all required values are empty strings.
+
+    :param kubeadmconfig_controlplane: KubeadmConfig CR which is empty.
+    """
+    assert kubeadmconfig_controlplane['metadata']['labels']['cluster.x-k8s.io/watch-filter'] == ensure.watch_label
+    assert kubeadmconfig_controlplane['metadata']['labels']['cluster.x-k8s.io/control-plane'] == ""
 
 @pytest.mark.smoke
-def test_aws_cluster_policy(release, cluster, awscluster_v1alpha3) -> None:
+def test_kubeadmconfig_auditpolicy(kubeadmconfig_with_files) -> None:
     """
-    test_aws_cluster_policy tests defaulting of an AWSCluster where all required values are empty strings.
+    test_kubeadmconfig_auditpolicy tests defaulting of a kubeadmconfig with audit policy details
 
-    :param release: Release CR which is used by the Cluster.
-    :param cluster: Cluster CR which uses the release and matches the AWSCluster.
-    :param awscluster: AWSCluster CR with empty strings which matches the Cluster CR.
+    :param kubeadmconfig_with_files: KubeadmConfig CR which includes some existing files
     """
-    assert awscluster_v1alpha3['metadata']['labels']['cluster.x-k8s.io/watch-filter'] == ensure.watch_label
-    assert awscluster_v1alpha3['spec']['region'] == "eu-west-1"
-    assert awscluster_v1alpha3['spec']['sshKeyName'] == "ssh-key"
-    assert len(awscluster_v1alpha3['spec']['networkSpec']['cni']['cniIngressRules']) > 0
+    found = False
+    for file in kubeadmconfig_with_files['spec']['files']:
+        if file['path'] == "/etc/kubernetes/policies/audit-policy.yaml":
+            found = True
 
+    assert found == True
 
 @pytest.mark.smoke
-def test_aws_cluster_policy_empty(release, cluster, awscluster_v1alpha3_empty) -> None:
+def test_kubeadmconfig_auditpolicy(kubeadmconfig_with_audit_file) -> None:
     """
-    test_aws_cluster_policy_empty tests defaulting of an AWSCluster where all required values are missing.
+    test_kubeadmconfig_auditpolicy tests defaulting of a kubeadmconfig with audit policy details
 
-    :param release: Release CR which is used by the Cluster.
-    :param cluster: Cluster CR which uses the release and matches the AWSCluster.
-    :param awscluster_empty: Empty AWSCluster CR which matches the Cluster CR.
+    :param kubeadmconfig_with_audit_file: KubeadmConfig CR which includes an existing audit file
     """
-    assert awscluster_v1alpha3_empty['metadata']['labels']['cluster.x-k8s.io/watch-filter'] == ensure.watch_label
-    assert awscluster_v1alpha3_empty['spec']['region'] == "eu-west-1"
-    assert awscluster_v1alpha3_empty['spec']['sshKeyName'] == "ssh-key"
-    assert len(awscluster_v1alpha3_empty['spec']['networkSpec']['cni']['cniIngressRules']) > 0
-
-@pytest.mark.smoke
-def test_aws_cluster_policy_solo(awscluster_v1alpha3_empty_labeled) -> None:
-    """
-    test_aws_cluster_policy_solo tests defaulting of an AWSCluster where all required values are missing and no other CRs are given.
-
-    :param awscluster_v1alpha3_empty_labeled: AWSCluster CR which is empty but has the cluster.x-k8s.io/watch-filter label.
-    """
-    assert awscluster_v1alpha3_empty_labeled['metadata']['labels']['cluster.x-k8s.io/watch-filter'] == ensure.watch_label
-    assert awscluster_v1alpha3_empty_labeled['spec']['region'] == "eu-west-1"
-    assert awscluster_v1alpha3_empty_labeled['spec']['sshKeyName'] == "ssh-key"
-    assert len(awscluster_v1alpha3_empty_labeled['spec']['networkSpec']['cni']['cniIngressRules']) > 0
-
-@pytest.mark.smoke
-def test_aws_cluster_role_identity_policy_solo(awsclusterroleidentity) -> None:
-    """
-    test_aws_cluster_role_identity_policy_solo tests defaulting of an AWSClusterRoleIdentity where all required values are missing and no other CRs are given.
-
-    :param awsclusterroleidentity: AWSClusterRoleIdentity CR with empty strings but has the cluster.x-k8s.io/watch-filter label.
-    """
-    assert awsclusterroleidentity['metadata']['labels']['cluster.x-k8s.io/watch-filter'] == ensure.watch_label
-    assert awsclusterroleidentity['spec']['roleARN'] == "default-arn"
-    assert awsclusterroleidentity['spec']['sourceIdentityRef']['name'] == "default"
-    assert awsclusterroleidentity['spec']['sourceIdentityRef']['kind'] == "AWSClusterControllerIdentity"
-
-@pytest.mark.smoke
-def test_aws_machine_template_policy_solo(awsmachinetemplate) -> None:
-    """
-    test_aws_machine_template_policy_solo tests defaulting of an AWSMachineTemplate where all required values are missing and no other CRs are given.
-
-    :param awsmachinetemplate: AWSMachineTemplate CR with empty strings but has the cluster.x-k8s.io/watch-filter label.
-    """
-    assert awsmachinetemplate['metadata']['labels']['cluster.x-k8s.io/watch-filter'] == ensure.watch_label
-    assert awsmachinetemplate['spec']['template']['spec']['instanceType'] == "t3.large"
-
-@pytest.mark.smoke
-def test_aws_machine_pool_policy_solo(awsmachinepool) -> None:
-    """
-    test_aws_machine_pool_policy_solo tests defaulting of an AWSMachinePool where all required values are missing and no other CRs are given.
-
-    :param awsmachinepool: AWSMachinePool CR with empty strings but has the cluster.x-k8s.io/watch-filter label.
-    """
-
-    assert awsmachinepool['spec']['awsLaunchTemplate']['rootVolume']['size'] == 300
-    assert awsmachinepool['spec']['awsLaunchTemplate']['rootVolume']['type'] == "gp3"
+    assert len(kubeadmconfig_with_audit_file['spec']['files']) == 1
