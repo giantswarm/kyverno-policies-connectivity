@@ -1,7 +1,7 @@
 {
   "extends": [
     "config:base",
-    ":reviewer(team:team-honeybadger)"
+    ":reviewer(team:team-cabbage)"
   ],
   "labels": ["dependencies"],
   "assigneesFromCodeOwners": true,
