@@ -12,6 +12,12 @@ spec:
         resources:
           kinds:
             - Pod
+{{- if .Proxy.Namespaces }}
+          namespaces:
+          {{- range .Proxy.Namespaces }}
+            - {{ . | quote }}
+          {{- end }}
+{{- end }}
       mutate:
         patchStrategicMerge:
           spec:

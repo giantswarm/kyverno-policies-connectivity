@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- It's possible to inject proxy vars only for given namespaces
+
 ## [0.0.1] - 2022-04-01
 
 ### Added
