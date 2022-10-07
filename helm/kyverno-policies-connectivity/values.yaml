@@ -2,9 +2,5 @@ Installation:
   V1:
     Proxy:
       Enabled: false
-    Guest:
-      Kubernetes:
-        Kubelet:
-          ImagePullProgressDeadline: 10m
 
 clusterDescription: "Unnamed Cluster"
