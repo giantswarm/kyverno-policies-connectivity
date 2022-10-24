@@ -1,6 +1,2 @@
-Installation:
-  V1:
-    Proxy:
-      Enabled: false
-
-clusterDescription: "Unnamed Cluster"
+proxy:
+  enabled: false
