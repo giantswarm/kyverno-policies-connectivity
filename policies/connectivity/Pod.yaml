@@ -1,5 +1,4 @@
-[[- with .Values.Installation.V1 ]]
-[[- if .Proxy.Enabled ]]
+[[- if .Values.proxy.enabled ]]
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
@@ -11,9 +10,9 @@ spec:
         resources:
           kinds:
             - Pod
-[[- if .Proxy.Namespaces ]]
+[[- if .Values.proxy.namespaces ]]
           namespaces:
-          [[- range .Proxy.Namespaces ]]
+          [[- range .Values.proxy.namespaces ]]
             - [[ . | quote ]]
           [[- end ]]
 [[- end ]]
@@ -23,65 +22,64 @@ spec:
             containers:
               - (name): "*"
                 env:
-                  [[- if .Secret.Proxy.HTTP ]]
+                  [[- if .Values.proxy.secret.http ]]
                   - name: HTTP_PROXY
-                    value: [[ .Secret.Proxy.HTTP ]]
+                    value: [[ .Values.proxy.secret.http ]]
                   - name: http_proxy
-                    value: [[ .Secret.Proxy.HTTP ]]
+                    value: [[ .Values.proxy.secret.http ]]
                   [[- end ]]
-                  [[- if .Secret.Proxy.HTTPS ]]
+                  [[- if .Values.proxy.secret.https ]]
                   - name: HTTPS_PROXY
-                    value: [[ .Secret.Proxy.HTTPS ]]
+                    value: [[ .Values.proxy.secret.https ]]
                   - name: https_proxy
-                    value: [[ .Secret.Proxy.HTTPS ]]
+                    value: [[ .Values.proxy.secret.https ]]
                   [[- end ]]
-                  [[- if .Proxy.NoProxy ]]
+                  [[- if .Values.proxy.noProxy ]]
                   - name: NO_PROXY
-                    value: [[ join "," .Proxy.NoProxy ]]
+                    value: [[ join "," .Values.proxy.noProxy ]]
                   - name: no_proxy
-                    value: [[ join "," .Proxy.NoProxy ]]
+                    value: [[ join "," .Values.proxy.noProxy ]]
                   [[- end ]]
             =(initContainers):
               - (name): "*"
                 env:
-                  [[- if .Secret.Proxy.HTTP ]]
+                  [[- if .Values.proxy.secret.http ]]
                   - name: HTTP_PROXY
-                    value: [[ .Secret.Proxy.HTTP ]]
+                    value: [[ .Values.proxy.secret.http ]]
                   - name: http_proxy
-                    value: [[ .Secret.Proxy.HTTP ]]
+                    value: [[ .Values.proxy.secret.http ]]
                   [[- end ]]
-                  [[- if .Secret.Proxy.HTTPS ]]
+                  [[- if .Values.proxy.secret.https ]]
                   - name: HTTPS_PROXY
-                    value: [[ .Secret.Proxy.HTTPS ]]
+                    value: [[ .Values.proxy.secret.https ]]
                   - name: https_proxy
-                    value: [[ .Secret.Proxy.HTTPS ]]
+                    value: [[ .Values.proxy.secret.https ]]
                   [[- end ]]
-                  [[- if .Proxy.NoProxy ]]
+                  [[- if .Values.proxy.noProxy ]]
                   - name: NO_PROXY
-                    value: [[ join "," .Proxy.NoProxy ]]
+                    value: [[ join "," .Values.proxy.noProxy ]]
                   - name: no_proxy
-                    value: [[ join "," .Proxy.NoProxy ]]
+                    value: [[ join "," .Values.proxy.noProxy ]]
                   [[- end ]]
             =(ephemeralContainers):
               - (name): "*"
                 env:
-                  [[- if .Secret.Proxy.HTTP ]]
+                  [[- if .Values.proxy.secret.HTTP ]]
                   - name: HTTP_PROXY
-                    value: [[ .Secret.Proxy.HTTP ]]
+                    value: [[ .Values.proxy.secret.http ]]
                   - name: http_proxy
-                    value: [[ .Secret.Proxy.HTTP ]]
+                    value: [[ .Values.proxy.secret.http ]]
                   [[- end ]]
-                  [[- if .Secret.Proxy.HTTPS ]]
+                  [[- if .Values.proxy.secret.https ]]
                   - name: HTTPS_PROXY
-                    value: [[ .Secret.Proxy.HTTPS ]]
+                    value: [[ .Values.proxy.secret.https ]]
                   - name: https_proxy
-                    value: [[ .Secret.Proxy.HTTPS ]]
+                    value: [[ .Values.proxy.secret.https ]]
                   [[- end ]]
-                  [[- if .Proxy.NoProxy ]]
+                  [[- if .Values.proxy.noProxy ]]
                   - name: NO_PROXY
-                    value: [[ join "," .Proxy.NoProxy ]]
+                    value: [[ join "," .Values.proxy.noProxy ]]
                   - name: no_proxy
-                    value: [[ join "," .Proxy.NoProxy ]]
+                    value: [[ join "," .Values.proxy.noProxy ]]
                   [[- end ]]
-[[- end ]]
 [[- end ]]
