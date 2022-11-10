@@ -23,17 +23,17 @@ spec:
             containers:
               - (name): "*"
                 env:
-                  {{- if .Values.proxy.secret.http }}
+                  {{- if .Values.proxy.http }}
                   - name: HTTP_PROXY
-                    value: {{ .Values.proxy.secret.http }}
+                    value: {{ .Values.proxy.http }}
                   - name: http_proxy
-                    value: {{ .Values.proxy.secret.http }}
+                    value: {{ .Values.proxy.http }}
                   {{- end }}
-                  {{- if .Values.proxy.secret.https }}
+                  {{- if .Values.proxy.https }}
                   - name: HTTPS_PROXY
-                    value: {{ .Values.proxy.secret.https }}
+                    value: {{ .Values.proxy.https }}
                   - name: https_proxy
-                    value: {{ .Values.proxy.secret.https }}
+                    value: {{ .Values.proxy.https }}
                   {{- end }}
                   {{- if .Values.proxy.noProxy }}
                   - name: NO_PROXY
@@ -44,17 +44,17 @@ spec:
             =(initContainers):
               - (name): "*"
                 env:
-                  {{- if .Values.proxy.secret.http }}
+                  {{- if .Values.proxy.http }}
                   - name: HTTP_PROXY
-                    value: {{ .Values.proxy.secret.http }}
+                    value: {{ .Values.proxy.http }}
                   - name: http_proxy
-                    value: {{ .Values.proxy.secret.http }}
+                    value: {{ .Values.proxy.http }}
                   {{- end }}
-                  {{- if .Values.proxy.secret.https }}
+                  {{- if .Values.proxy.https }}
                   - name: HTTPS_PROXY
-                    value: {{ .Values.proxy.secret.https }}
+                    value: {{ .Values.proxy.https }}
                   - name: https_proxy
-                    value: {{ .Values.proxy.secret.https }}
+                    value: {{ .Values.proxy.https }}
                   {{- end }}
                   {{- if .Values.proxy.noProxy }}
                   - name: NO_PROXY
@@ -65,17 +65,17 @@ spec:
             =(ephemeralContainers):
               - (name): "*"
                 env:
-                  {{- if .Values.proxy.secret.HTTP }}
+                  {{- if .Values.proxy.http }}
                   - name: HTTP_PROXY
-                    value: {{ .Values.proxy.secret.http }}
+                    value: {{ .Values.proxy.http }}
                   - name: http_proxy
-                    value: {{ .Values.proxy.secret.http }}
+                    value: {{ .Values.proxy.http }}
                   {{- end }}
-                  {{- if .Values.proxy.secret.https }}
+                  {{- if .Values.proxy.https }}
                   - name: HTTPS_PROXY
-                    value: {{ .Values.proxy.secret.https }}
+                    value: {{ .Values.proxy.https }}
                   - name: https_proxy
-                    value: {{ .Values.proxy.secret.https }}
+                    value: {{ .Values.proxy.https }}
                   {{- end }}
                   {{- if .Values.proxy.noProxy }}
                   - name: NO_PROXY
