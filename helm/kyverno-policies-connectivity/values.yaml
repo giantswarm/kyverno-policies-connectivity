@@ -1,2 +1,8 @@
 proxy:
   enabled: false
+
+cluster:
+  proxy:
+    http: ""
+    https: ""
+    noProxy: ""
