@@ -1,5 +1,5 @@
 [[- if .Values.proxy.enabled ]]
-[[- $proxy := deepCopy .Values.cluster.proxy | mustMerge .Values.proxy -]]
+[[- $proxy := deepCopy .Values.cluster.proxy | mustMerge .Values.proxy ]]
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
