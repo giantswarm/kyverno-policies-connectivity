@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2022-11-15
+
 ### Fixed
 
 - Add missing new line during rendering to get a valid manifest.
@@ -43,7 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial policies moved from [`kyverno-policies`](https://github.com/giantswarm/kyverno-policies).
 
-[Unreleased]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.0.3...v0.1.0
