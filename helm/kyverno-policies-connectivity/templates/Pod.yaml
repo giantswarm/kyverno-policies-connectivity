@@ -1,6 +1,6 @@
 # THIS FILE IS GENERATED WITH 'make generate' - DO NOT EDIT MANUALLY
 {{- if .Values.proxy.enabled }}
-{{- $proxy := deepCopy .Values.cluster.proxy | mustMerge .Values.proxy -}}
+{{- $proxy := deepCopy .Values.cluster.proxy | mustMerge .Values.proxy }}
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
