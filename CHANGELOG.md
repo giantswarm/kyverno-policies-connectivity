@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Fixed
+
+- Removed the `=()` conditional from initContainers and ephemeralContainers. It isn't supported in mutate rules
+
 ## [0.2.1] - 2022-11-15
 
 ### Fixed
