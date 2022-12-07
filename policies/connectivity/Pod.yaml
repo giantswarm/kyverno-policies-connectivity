@@ -7,22 +7,24 @@ metadata:
 spec:
   rules:
     - name: inject-proxy-env-to-containers
+      exclude:
+        any:
+        - resources:
+            kinds:
+            - Pod
+            names:
+            - "capi-*"
+            - "dex-k8s-*"
       match:
-        resources:
-          kinds:
+        all:
+        - resources:
+            kinds:
             - Pod
 [[- if $proxy.namespaces ]]
           namespaces:
           [[- range $proxy.namespaces ]]
             - [[ . | quote ]]
           [[- end ]]
-      exclude:
-        resources:
-          kinds:
-          - Pod
-          names: 
-          - "dex-app*"
-          - "capi-*"
 [[- end ]]
       mutate:
         patchStrategicMerge:
