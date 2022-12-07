@@ -14,7 +14,6 @@ spec:
             - Pod
             names:
             - "capi-*"
-            - "dex-k8s-*"
       match:
         all:
         - resources:
