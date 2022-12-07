@@ -17,6 +17,13 @@ spec:
           {{- range $proxy.namespaces }}
             - {{ . | quote }}
           {{- end }}
+      exclude:
+        resources:
+          kinds:
+          - Pod
+          names: 
+          - "dex-app*"
+          - "capi-*"
 {{- end }}
       mutate:
         patchStrategicMerge:
