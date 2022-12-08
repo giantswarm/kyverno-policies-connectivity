@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Exclude `capi-` pods from the env proxy injection.
+- Exclude `capi-` `dex-k8s-*` pods from the env proxy injection.
 
 ## [0.2.3] - 2022-11-30
 
