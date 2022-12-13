@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Added
+
+- Support dynamic policy configuration for proxy.
+
 ## [0.2.3] - 2022-11-30
 
 ## Added
