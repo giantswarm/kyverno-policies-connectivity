@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## Added
+### Added
 
 - Add job to circleci that pushes to the `cloud-director-app-collection`.
+- Exclude `capi-` `dex-k8s-*` pods from the env proxy injection.
 
 ## [0.3.0] - 2022-12-13
 

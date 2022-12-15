@@ -7,9 +7,18 @@ metadata:
 spec:
   rules:
     - name: inject-proxy-env-to-containers
+      exclude:
+        any:
+        - resources:
+            kinds:
+            - Pod
+            names:
+            - "capi-*"
+            - "dex-k8s-*"
       match:
-        resources:
-          kinds:
+        all:
+        - resources:
+            kinds:
             - Pod
 [[- if $proxy.namespaces ]]
           namespaces:
