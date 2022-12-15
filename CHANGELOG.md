@@ -9,7 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add job to circleci that pushes to the `cloud-director-app-collection`.
 - Exclude `capi-` `dex-k8s-*` pods from the env proxy injection.
+
+## [0.3.0] - 2022-12-13
+
+## Added
+
+- Support dynamic policy configuration for proxy.
 
 ## [0.2.3] - 2022-11-30
 
@@ -61,7 +68,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial policies moved from [`kyverno-policies`](https://github.com/giantswarm/kyverno-policies).
 
-[Unreleased]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.2.3...HEAD
+[Unreleased]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.2.3...v0.3.0
 [0.2.3]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.2.0...v0.2.1

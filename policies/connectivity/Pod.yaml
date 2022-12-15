@@ -26,6 +26,32 @@ spec:
             - [[ . | quote ]]
           [[- end ]]
 [[- end ]]
+      context:
+        - name: kubeadmConfig
+          configMap:
+            name: kubeadm-config
+            namespace: kube-system
+        - name: clusterConfiguration
+          variable:
+            value: [[`"[[ kubeadmConfig.data.ClusterConfiguration | parse_yaml(@) ]]"`]]
+        - name: apiEndpoint
+          variable:
+            value: [[`"[[ clusterConfiguration.controlPlaneEndpoint | split(@, ':') | [0] ]]"`]]
+        - name: dnsDomain
+          variable:
+            value: [[`"[[ clusterConfiguration.networking.dnsDomain ]]"`]]
+        - name: podSubnet
+          variable:
+            value: [[`"[[ clusterConfiguration.networking.podSubnet ]]"`]]
+        - name: serviceSubnet
+          variable:
+            value: [[`"[[ clusterConfiguration.networking.serviceSubnet ]]"`]]
+        - name: dynamicNoProxy
+          variable:
+            value: [[`"[[apiEndpoint]],[[dnsDomain]],[[podSubnet]],[[serviceSubnet]]"`]]
+        - name: fullNoProxy
+          variable:
+            value: [[ printf "\"%s,%s,%s\"" $proxy.noProxy "svc,127.0.0.1,localhost" "[[dynamicNoProxy]]" ]]
       mutate:
         patchStrategicMerge:
           spec:
@@ -46,9 +72,9 @@ spec:
                   [[- end ]]
                   [[- if $proxy.noProxy ]]
                   - name: NO_PROXY
-                    value: [[ join "," $proxy.noProxy ]]
+                    value: [[`"[[ fullNoProxy ]]"`]]
                   - name: no_proxy
-                    value: [[ join "," $proxy.noProxy ]]
+                    value: [[`"[[ fullNoProxy ]]"`]]
                   [[- end ]]
             initContainers:
               - (name): "*"
@@ -67,9 +93,9 @@ spec:
                   [[- end ]]
                   [[- if $proxy.noProxy ]]
                   - name: NO_PROXY
-                    value: [[ join "," $proxy.noProxy ]]
+                    value: [[`"[[ fullNoProxy ]]"`]]
                   - name: no_proxy
-                    value: [[ join "," $proxy.noProxy ]]
+                    value: [[`"[[ fullNoProxy ]]"`]]
                   [[- end ]]
             ephemeralContainers:
               - (name): "*"
@@ -88,8 +114,8 @@ spec:
                   [[- end ]]
                   [[- if $proxy.noProxy ]]
                   - name: NO_PROXY
-                    value: [[ join "," $proxy.noProxy ]]
+                    value: [[`"[[ fullNoProxy ]]"`]]
                   - name: no_proxy
-                    value: [[ join "," $proxy.noProxy ]]
+                    value: [[`"[[ fullNoProxy ]]"`]]
                   [[- end ]]
 [[- end ]]
