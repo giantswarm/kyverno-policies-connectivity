@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Remove the `kyverno validate` CI step.
+
 ## [0.3.1] - 2022-12-15
 
 ### Added
