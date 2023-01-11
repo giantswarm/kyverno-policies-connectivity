@@ -15,6 +15,11 @@ spec:
             names:
             - "capi-*"
             - "dex-k8s-*"
+        - resources:
+            kinds:
+            - Pod
+            annotations:
+              policies.kyverno.io/inject-proxy-env: exclude
       match:
         all:
         - resources:
