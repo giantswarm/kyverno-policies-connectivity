@@ -20,7 +20,7 @@ spec:
             kinds:
             - Pod
             annotations:
-              policies.kyverno.io/inject-proxy-env: block
+              policies.kyverno.io/inject-proxy-env: exclude
       match:
         all:
         - resources:
