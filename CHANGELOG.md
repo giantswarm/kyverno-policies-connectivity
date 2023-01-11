@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add annotation that allows blocking the proxy env injection on specific pod.
+
 ### Changed
 
 - Remove the `kyverno validate` CI step.
