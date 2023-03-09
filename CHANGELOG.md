@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update clusterctl versions for circleci test
 - Update CAPI providers versions for circleci test
+- Apply proxy variables to pod controllers templates instead of directly to pods.
 
 ## [0.3.2] - 2023-01-11
 
