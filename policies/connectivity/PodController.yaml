@@ -14,6 +14,7 @@ spec:
             - Deployment
             - StatefulSet
             - DaemonSet
+            - Job
             names:
             - "capi-*"
             - "dex-k8s-*"
@@ -22,6 +23,7 @@ spec:
             - Deployment
             - StatefulSet
             - DaemonSet
+            - Job
             annotations:
               policies.kyverno.io/inject-proxy-env: exclude
       match:
@@ -31,6 +33,7 @@ spec:
             - Deployment
             - StatefulSet
             - DaemonSet
+            - Job
 [[- if $proxy.namespaces ]]
           namespaces:
           [[- range $proxy.namespaces ]]
