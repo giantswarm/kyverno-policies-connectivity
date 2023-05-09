@@ -17,7 +17,6 @@ spec:
             - DaemonSet
             - Job
             names:
-            - "capi-*"
             - "dex-k8s-*"
         - resources:
             kinds:
