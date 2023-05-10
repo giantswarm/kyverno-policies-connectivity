@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add push to `gcp-app-collection`.
 - Add push to `vsphere-app-collection`.
 
+### Changed
+
+- Make the name based exclusion of the `inject-proxy-env-to-containers` policy configurable. Defaulting to status quo.
+
 ## [0.4.0] - 2023-03-14
 
 ### Added

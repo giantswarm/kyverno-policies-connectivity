@@ -16,8 +16,9 @@ spec:
             - DaemonSet
             - Job
             names:
-            - "capi-*"
-            - "dex-k8s-*"
+            [[- range .Values.exclude.names ]]
+            - [[ . | quote ]]
+            [[- end ]]
         - resources:
             kinds:
             - Deployment

@@ -6,3 +6,8 @@ cluster:
     http: ""
     https: ""
     noProxy: ""
+
+exclude:
+  names:
+  - "capi-*"
+  - "dex-k8s-*"

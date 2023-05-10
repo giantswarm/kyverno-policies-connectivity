@@ -1,0 +1,55 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "cluster": {
+            "title": "Cluster",
+            "type": "object",
+            "properties": {
+                "proxy": {
+                    "title": "Proxy related settings",
+                    "type": "object",
+                    "properties": {
+                        "http": {
+                            "description": "URL of http proxy which should be injected to http_proxy env var",
+                            "title": "Http",
+                            "type": "string"
+                        },
+                        "https": {
+                            "description": "URL of https proxy which should be injected to https_proxy env var",
+                            "title": "Https",
+                            "type": "string"
+                        },
+                        "noProxy": {
+                            "description": "comma sepparated list of hosts or cidrs that should not be proxied, the no_proxy env var. Note: make sure to escape the comma with slash",
+                            "title": "No proxy",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "proxy": {
+            "title": "Proxy",
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "description": "should the policy that inject proxy related env vars be enabled?",
+                    "title": "Enabled",
+                    "type": "boolean"
+                }
+            }
+        },
+        "exclude": {
+            "title": "Exclude",
+            "type": "object",
+            "properties": {
+                "names": {
+                    "description": "Array of strings containing names of k8s resources to exclude",
+                    "title": "Names",
+                    "type": "array"
+                }
+            }
+        }
+    }
+}
