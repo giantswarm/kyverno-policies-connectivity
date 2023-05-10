@@ -16,9 +16,9 @@ spec:
             - DaemonSet
             - Job
             names:
-            {{- range .Values.exclude.names }}
-            - {{ . | quote }}
-            {{- end }}
+            [[- range .Values.exclude.names ]]
+            - [[ . | quote ]]
+            [[- end ]]
         - resources:
             kinds:
             - Deployment
