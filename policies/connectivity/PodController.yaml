@@ -16,7 +16,9 @@ spec:
             - DaemonSet
             - Job
             names:
-            - "dex-k8s-*"
+            {{- range .Values.exclude.names }}
+            - {{ . | quote }}
+            {{- end }}
         - resources:
             kinds:
             - Deployment
