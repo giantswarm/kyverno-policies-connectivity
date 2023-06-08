@@ -137,4 +137,5 @@ spec:
                       - name: no_proxy
                         value: {{`"{{ fullNoProxy }}"`}}
                       {{- end }}
+---
 {{- end }}

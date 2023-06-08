@@ -1,0 +1,61 @@
+[[- if .Values.wcIpCheck.enabled ]]
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: [[ .Release.Name ]]-check-wc-cp-ip
+spec:
+  rules:
+    - name: check-wc-cp-ip-clusters
+      exclude:
+        any:
+        - resources:
+            kinds:
+            - Cluster
+            [[- range .Values.wcIpCheck.infraClusterNames ]]
+            - [[ . | quote ]]
+            [[- end ]]
+            names:
+            [[- range .Values.wcIpCheck.exclude.names ]]
+            - [[ . | quote ]]
+            [[- end ]]
+        - resources:
+            kinds:
+            - Cluster
+            [[- range .Values.wcIpCheck.infraClusterNames ]]
+            - [[ . | quote ]]
+            [[- end ]]
+            annotations:
+              policies.kyverno.io/check-wc-cp-ip: exclude
+      match:
+        all:
+        - resources:
+            kinds:
+            - Cluster
+            [[- range .Values.wcIpCheck.infraClusterNames ]]
+            - [[ . | quote ]]
+            [[- end ]]
+      context:
+        - name: wc-allowed-ips
+          configMap:
+            name: [[ .Release.Name ]]-wc-allowed-ips
+            namespace: "[[ $.Release.Namespace ]]"
+        - name: kubeadmConfig
+          configMap:
+            name: kubeadm-config
+            namespace: kube-system
+        - name: clusterConfiguration
+          variable:
+            value: [[`"[[ kubeadmConfig.data.ClusterConfiguration | parse_yaml(@) ]]"`]]
+        - name: apiEndpoint
+          variable:
+            value: [[`"[[ clusterConfiguration.controlPlaneEndpoint | split(@, ':') | [0] ]]"`]]
+      validate:
+        message: "IP for workload cluster's conrol plane in not from following range: [[`[[ \"wc-allowed-ips\".data.\"allowed-ips\" ]]`]]"
+        deny:
+          conditions:
+            all: # or any
+            - key: [[`"[[ request.object.data.spec.controlPlaneEndpoint.host ]]"`]]
+              operator: In # AnyNotIn
+              value: [[`"[[ \"wc-allowed-ips\".data.\"allowed-ips\" | parse_json(@) ]]"`]]
+---
+[[- end ]]
