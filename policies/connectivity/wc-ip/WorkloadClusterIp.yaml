@@ -3,14 +3,19 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: [[ .Release.Name ]]-check-wc-cp-ip
+  annotations:
+    policies.kyverno.io/title: Block cluster resource creation if IP for control plane is not comming from a pre-defined range.
+    policies.kyverno.io/description: We want to block the creation of workload clusters (WC) in case they use statically selected IP from
+     a range that does not belong to the related management cluster. This should prevent IP clashes of WC's control-planes.
 spec:
+  validationFailureAction: enforce
   rules:
     - name: check-wc-cp-ip-clusters
       exclude:
         any:
+        [[- if (.Values.wcIpCheck.exclude).names ]]
         - resources:
             kinds:
-            - Cluster
             [[- range .Values.wcIpCheck.infraClusterNames ]]
             - [[ . | quote ]]
             [[- end ]]
@@ -18,9 +23,9 @@ spec:
             [[- range .Values.wcIpCheck.exclude.names ]]
             - [[ . | quote ]]
             [[- end ]]
+        [[- end ]]
         - resources:
             kinds:
-            - Cluster
             [[- range .Values.wcIpCheck.infraClusterNames ]]
             - [[ . | quote ]]
             [[- end ]]
@@ -30,12 +35,11 @@ spec:
         all:
         - resources:
             kinds:
-            - Cluster
             [[- range .Values.wcIpCheck.infraClusterNames ]]
             - [[ . | quote ]]
             [[- end ]]
       context:
-        - name: wc-allowed-ips
+        - name: wcAllowedIpsCm
           configMap:
             name: [[ .Release.Name ]]-wc-allowed-ips
             namespace: "[[ $.Release.Namespace ]]"
@@ -46,16 +50,33 @@ spec:
         - name: clusterConfiguration
           variable:
             value: [[`"[[ kubeadmConfig.data.ClusterConfiguration | parse_yaml(@) ]]"`]]
+        - name: allowedIps
+          variable:
+            value: [[`"[[ wcAllowedIpsCm.data.\"allowed-ips\" | parse_yaml(@) ]]"`]]
         - name: apiEndpoint
           variable:
             value: [[`"[[ clusterConfiguration.controlPlaneEndpoint | split(@, ':') | [0] ]]"`]]
+        - name: mcClusterName
+          variable:
+            value: [[`"[[ clusterConfiguration.clusterName ]]"`]]
       validate:
-        message: "IP for workload cluster's conrol plane in not from following range: [[`[[ \"wc-allowed-ips\".data.\"allowed-ips\" ]]`]]"
+        message: |
+          IP for workload cluster's conrol plane ([[`"[[ request.object.spec.controlPlaneEndpoint.host ]]"`]])
+          is not from the following IP segment:
+          [[- if .Values.wcIpCheck.controlPlaneIpRange.range ]]
+          [[ .Values.wcIpCheck.controlPlaneIpRange.range ]]
+          [[- else ]]
+          [[`"[[ apiEndpoint ]]"`]]/[[ .Values.wcIpCheck.controlPlaneIpRange.maskBits ]]
+          offsetToMCControlPlaneIp: [[ .Values.wcIpCheck.controlPlaneIpRange.offsetToMCControlPlaneIp ]]
+          [[- end ]]
         deny:
           conditions:
-            all: # or any
-            - key: [[`"[[ request.object.data.spec.controlPlaneEndpoint.host ]]"`]]
-              operator: In # AnyNotIn
-              value: [[`"[[ \"wc-allowed-ips\".data.\"allowed-ips\" | parse_json(@) ]]"`]]
+            all:
+            - key: [[`"[[ request.object.spec.controlPlaneEndpoint.host ]]"`]]
+              operator: NotIn
+              value: [[`"[[ allowedIps ]]"`]]
+            - key: [[`"[[ request.object.metadata.name ]]"`]]
+              operator: NotEquals
+              value: [[`"[[ mcClusterName ]]"`]]
 ---
 [[- end ]]

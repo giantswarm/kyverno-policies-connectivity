@@ -129,11 +129,10 @@ spec:
                   helm.sh/chart: [[ .Chart.Name ]]-[[ .Chart.Version | replace "+" "_" ]]
               data:
                 allowed-ips: |
-                - ${cp_ip}
               EOF
 
               for i in $(seq ${ip_start} ${ip_end}); do
-                echo "    - ${ip_prefix}.${i}" >> /tmp/cm.yaml
+                echo "    - \"${ip_prefix}.${i}\"" >> /tmp/cm.yaml
               done
               set +x
               echo -e "\n\nApplying following configmap:\n-----------------------------"
