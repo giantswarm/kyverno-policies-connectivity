@@ -8,7 +8,7 @@ metadata:
     policies.kyverno.io/description: We want to block the creation of workload clusters (WC) in case they use statically selected IP from
      a range that does not belong to the related management cluster. This should prevent IP clashes of WC's control-planes.
 spec:
-  validationFailureAction: enforce
+  validationFailureAction: [[ .Values.wcIpCheck.validationFailureAction ]]
   rules:
     - name: check-wc-cp-ip-clusters
       exclude:

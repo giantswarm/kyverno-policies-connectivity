@@ -20,7 +20,7 @@ exclude:
 
 wcIpCheck:
   enabled: false
-  validationFailureAction: Enforce # or Audit
+  validationFailureAction: enforce # or audit
   infraClusterNames: # don't put general CAPI Cluster here, ip to this CR should be assigned by the infra controller
   - "VSphereCluster"
   controlPlaneIpRange:
