@@ -60,6 +60,11 @@ spec:
         - name: mcClusterName
           variable:
             value: {{`"{{ clusterConfiguration.clusterName }}"`}}
+      preconditions:
+        all:
+        - key: {{`"{{ request.object.spec.controlPlaneEndpoint.host }}"`}}
+          operator: NotEquals
+          value: ""
       validate:
         message: |
           IP for workload cluster's conrol plane ({{`"{{ request.object.spec.controlPlaneEndpoint.host }}"`}})
