@@ -1,7 +1,13 @@
+certManager:
+  sourceNamespace: ""
+  syncSecret: false
+  targetNamespace: "org-*"
+
 proxy:
   enabled: false
 
 cluster:
+  name: ""
   proxy:
     http: ""
     https: ""
