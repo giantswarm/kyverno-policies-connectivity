@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add ClusterPolicy to sync cert-manager Route53 secret to all `org` namespaces.
+
 ### Changed
 
 - Set `validationFailureAction: Enforce`.

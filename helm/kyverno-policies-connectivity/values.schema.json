@@ -2,10 +2,36 @@
     "$schema": "http://json-schema.org/schema#",
     "type": "object",
     "properties": {
+        "certManager": {
+            "title": "CertManager",
+            "type": "object",
+            "properties": {
+                "sourceNamespace": {
+                    "description": "Namespace containing source secret to sync to other namespaces",
+                    "title": "SourceNamespace",
+                    "type": "string"
+                },
+                "syncSecret": {
+                    "description": "Should the policy to sync the Route53 secret be enabled?",
+                    "title": "SyncSecret",
+                    "type": "boolean"
+                },
+                "targetNamespace": {
+                    "description": "Destinatinon namespace to sync the secret to",
+                    "title": "TargetNamespace",
+                    "type": "string"
+                }
+            }
+        },
         "cluster": {
             "title": "Cluster",
             "type": "object",
             "properties": {
+                "name": {
+                    "description": "The name of the installation",
+                    "title": "Name",
+                    "type": "string"
+                },
                 "proxy": {
                     "title": "Proxy related settings",
                     "type": "object",
