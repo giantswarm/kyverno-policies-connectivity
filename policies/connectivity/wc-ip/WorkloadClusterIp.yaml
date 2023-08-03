@@ -68,11 +68,15 @@ spec:
         message: |
           IP for workload cluster's conrol plane ([[`"[[ request.object.spec.controlPlaneEndpoint.host ]]"`]])
           is not from the following IP segment:
-          [[- if .Values.wcIpCheck.controlPlaneIpRange.range ]]
-          [[ .Values.wcIpCheck.controlPlaneIpRange.range ]]
-          [[- else ]]
-          [[`"[[ apiEndpoint ]]"`]]/[[ .Values.wcIpCheck.controlPlaneIpRange.maskBits ]]
-          offsetToMCControlPlaneIp: [[ .Values.wcIpCheck.controlPlaneIpRange.offsetToMCControlPlaneIp ]]
+          [[- with .Values.wcIpCheck ]]
+          [[- range .ipRanges ]]
+            - [[- .start ]] - [[- .end ]]
+          [[- end ]]
+          [[- if .deriveFromControlPlaneEndpoint.enabled ]]
+          [[- with .deriveFromControlPlaneEndpoint ]]
+            - ([[`"[[ apiEndpoint ]]"`]] + [[ .offset ]]) - ([[`"[[ apiEndpoint ]]"`]] + [[ .offset ]] + [[ .number ]])
+          [[- end ]]
+          [[- end ]]
           [[- end ]]
         deny:
           conditions:

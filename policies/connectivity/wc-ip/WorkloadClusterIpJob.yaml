@@ -102,22 +102,6 @@ spec:
             - "-o"
             - "pipefail"
             - |
-              [[- if .Values.wcIpCheck.controlPlaneIpRange.range ]]
-              # take the cidr value from helm
-              cp_ip=$(echo [[.Values.wcIpCheck.controlPlaneIpRange.range]] | cut -d/ -f1)
-              ip_range=$(echo [[.Values.wcIpCheck.controlPlaneIpRange.range]] | cut -d/ -f2)
-              [[- else ]]
-              # calculate the range based on MC's control plane ip
-              #cp_ip=$(kubectl get cm kubeadm-config -n kube-system -ojsonpath={.data.ClusterConfiguration} | yq '.controlPlaneEndpoint'| cut -d':' -f1)
-              cp_ip=$(kubectl get cm kubeadm-config -n kube-system -ojsonpath={.data.ClusterConfiguration} | grep controlPlaneEndpoint: | cut -d' ' -f2 | cut -d':' -f1)
-              ip_range=$((2 ** (32-[[.Values.wcIpCheck.controlPlaneIpRange.maskBits]])))
-              [[- end ]]
-
-              last_ip_chunk=$(echo ${cp_ip} | cut -d'.' -f4)
-              ip_prefix=$(echo ${cp_ip} | cut -d'.' -f1-3)
-              ip_start=$(( last_ip_chunk + [[.Values.wcIpCheck.controlPlaneIpRange.offsetToMCControlPlaneIp]] ))
-              ip_end=$(( last_ip_chunk+ip_range > 254 ? 254 : last_ip_chunk+ip_range ))
-
               cat > /tmp/cm.yaml <<EOF
               apiVersion: v1
               kind: ConfigMap
@@ -131,9 +115,32 @@ spec:
                 allowed-ips: |
               EOF
 
+              [[- range .Values.wcIpCheck.ipRanges ]]
+
+              # including explicit ip range [[ .start ]]-[[ .end ]]
+              ip_start=$(echo [[ .start ]] | cut -d'.' -f4)
+              ip_end=$(echo [[ .end ]] | cut -d'.' -f4)
+              ip_prefix=$(echo [[ .start ]] | cut -d'.' -f1-3)
               for i in $(seq ${ip_start} ${ip_end}); do
                 echo "    - \"${ip_prefix}.${i}\"" >> /tmp/cm.yaml
               done
+              [[- end ]]
+
+              [[- if .Values.wcIpCheck.deriveFromControlPlaneEndpoint.enabled ]]
+              [[- with .Values.wcIpCheck.deriveFromControlPlaneEndpoint ]]
+
+              # calculate the range based on MC's control plane ip
+              cp_ip=$(kubectl get cm kubeadm-config -n kube-system -ojsonpath={.data.ClusterConfiguration} | grep controlPlaneEndpoint: | cut -d' ' -f2 | cut -d':' -f1)
+              last_ip_chunk=$(echo ${cp_ip} | cut -d'.' -f4)
+              ip_prefix=$(echo ${cp_ip} | cut -d'.' -f1-3)
+              ip_start=$(( last_ip_chunk + [[ .offset ]] ))
+              ip_end=$(( last_ip_chunk + [[ .offset ]] + [[ .number ]] > 254 ? 254 : last_ip_chunk + [[ .offset ]] + [[ .number ]] ))
+              for i in $(seq ${ip_start} ${ip_end}); do
+                echo "    - \"${ip_prefix}.${i}\"" >> /tmp/cm.yaml
+              done
+              [[- end ]]
+              [[- end ]]
+              
               set +x
               echo -e "\n\nApplying following configmap:\n-----------------------------"
               cat /tmp/cm.yaml

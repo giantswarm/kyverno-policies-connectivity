@@ -20,15 +20,17 @@ exclude:
 
 wcIpCheck:
   enabled: false
-  validationFailureAction: enforce  # or audit
+  validationFailureAction: Enforce  # or Audit
   infraClusterNames:  # don't put general CAPI Cluster here, ip to this CR should be assigned by the infra controller
   - "VSphereCluster"
-  controlPlaneIpRange:
-    # range: ""  # explicit IP range from which the IPs can be set to WC's control planes (format: 10.10.222.230/29)
-    # Following two options are used for calculating the range dynamically from the MC's control plane ip
-    # result will be kubeadmConfig.data.ClusterConfiguration.controlPlaneEndpoint+offsetToMCControlPlaneIp/maskBits
-    offsetToMCControlPlaneIp: 3  # this many IPs from the calculated range will be saved also for MC
-    maskBits: 29  # used only when range is empty
+  ipRanges:  # explicit IP range from which the IPs can be set to WC's control planes
+  - start: 10.10.222.242
+    end: 10.10.222.249
+  # Following options are used for calculating the range dynamically from the MC's control plane ip
+  deriveFromControlPlaneEndpoint:  # should the ipRange be automatically figured out from the IP pertaining to control plane?
+    enabled: true
+    offset: 2  # first ip of the range will be calculated as controlPlaneEndpoint.host + this
+    number: 8  # how large the ip range should be
   exclude:
     names: []
   installJob:
