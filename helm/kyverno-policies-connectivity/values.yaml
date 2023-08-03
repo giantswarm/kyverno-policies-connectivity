@@ -17,3 +17,27 @@ exclude:
   names:
   - "capi-*"
   - "dex-k8s-*"
+
+wcIpCheck:
+  enabled: false
+  validationFailureAction: Enforce  # or Audit
+  infraClusterNames:  # don't put general CAPI Cluster here, ip to this CR should be assigned by the infra controller
+  - "VSphereCluster"
+  ipRanges:  # explicit IP range from which the IPs can be set to WC's control planes
+  - start: 10.10.222.242
+    end: 10.10.222.249
+  # Following options are used for calculating the range dynamically from the MC's control plane ip
+  deriveFromControlPlaneEndpoint:  # should the ipRange be automatically figured out from the IP pertaining to control plane?
+    enabled: true
+    offset: 2  # first ip of the range will be calculated as controlPlaneEndpoint.host + this
+    number: 8  # how large the ip range should be
+  exclude:
+    names: []
+  installJob:
+    securityContext:
+      runAsGroup: 1000
+      runAsUser: 1000
+    kubectlImage:
+      registry: quay.io
+      name: giantswarm/kubectl
+      tag: 1.23.5

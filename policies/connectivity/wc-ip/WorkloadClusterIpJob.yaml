@@ -1,0 +1,157 @@
+[[- if .Values.wcIpCheck.enabled ]]
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "[[ .Release.Name ]]-read-write-configmap"
+  namespace: "[[ $.Release.Namespace ]]"
+  annotations:
+    [[- include "preinstallHookAnnotations" $ | nindent 4 ]]
+    "helm.sh/hook-weight": "-2"
+---
+
+# read configmap 'kubeadm-config' in 'kube-system' ns
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: "[[ .Release.Name ]]-read-configmap"
+  namespace: "kube-system"
+  annotations:
+    [[- include "preinstallHookAnnotations" $ | nindent 4 ]]
+    "helm.sh/hook-weight": "-2"
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    resourceNames: ["kubeadm-config"]
+    verbs: ["list", "get"]
+---
+
+# create/update configmap '[[ .Release.Name ]]-wc-allowed-ips' in the [[ $.Release.Namespace ]] ns
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: "[[ .Release.Name ]]-read-write-configmap"
+  namespace: "[[ $.Release.Namespace ]]"
+  annotations:
+    [[- include "preinstallHookAnnotations" $ | nindent 4 ]]
+    "helm.sh/hook-weight": "-2"
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["create", "update", "get", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: "[[ .Release.Name ]]-read-configmap"
+  namespace: "kube-system"
+  annotations:
+    [[- include "preinstallHookAnnotations" $ | nindent 4 ]]
+    "helm.sh/hook-weight": "-1"
+subjects:
+  - kind: ServiceAccount
+    name: "[[ .Release.Name ]]-read-write-configmap"
+    namespace: "[[ $.Release.Namespace ]]"
+roleRef:
+  kind: Role
+  name: "[[ .Release.Name ]]-read-configmap"
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: "[[ .Release.Name ]]-read-write-configmap"
+  namespace: "[[ $.Release.Namespace ]]"
+  annotations:
+    [[- include "preinstallHookAnnotations" $ | nindent 4 ]]
+    "helm.sh/hook-weight": "-1"
+subjects:
+  - kind: ServiceAccount
+    name: "[[ .Release.Name ]]-read-write-configmap"
+    namespace: "[[ $.Release.Namespace ]]"
+roleRef:
+  kind: Role
+  name: "[[ .Release.Name ]]-read-write-configmap"
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "[[ .Release.Name ]]-prepare-cm-preinstall-hook"
+  namespace: "[[ $.Release.Namespace ]]"
+  annotations:
+    [[- include "preinstallHookAnnotations" $ | nindent 4 ]]
+    "helm.sh/hook-weight": "0"
+spec:
+  ttlSecondsAfterFinished: 86400 # 24h
+  template:
+    metadata:
+      name: "[[ .Release.Name ]]-prepare-cm-preinstall-hook"
+      namespace: "[[ $.Release.Namespace ]]"
+    spec:
+      restartPolicy: Never
+      serviceAccountName: "[[ .Release.Name ]]-read-write-configmap"
+      securityContext:
+        runAsUser: [[ .Values.wcIpCheck.installJob.securityContext.runAsUser ]]
+        runAsGroup: [[ .Values.wcIpCheck.installJob.securityContext.runAsGroup ]]
+      containers:
+        - name: pre-install-job
+          image: "[[ .Values.wcIpCheck.installJob.kubectlImage.registry ]]/[[ .Values.wcIpCheck.installJob.kubectlImage.name ]]:[[ .Values.wcIpCheck.installJob.kubectlImage.tag ]]"
+          command:
+            - "/bin/bash"
+            - "-xec"
+            - "-o"
+            - "pipefail"
+            - |
+              cat > /tmp/cm.yaml <<EOF
+              apiVersion: v1
+              kind: ConfigMap
+              metadata:
+                name: "[[ .Release.Name ]]-wc-allowed-ips"
+                namespace: "[[ $.Release.Namespace ]]"
+                labels:
+                  app.kubernetes.io/instance: [[ .Release.Name ]]
+                  helm.sh/chart: [[ .Chart.Name ]]-[[ .Chart.Version | replace "+" "_" ]]
+              data:
+                allowed-ips: |
+              EOF
+
+              [[- range .Values.wcIpCheck.ipRanges ]]
+
+              # including explicit ip range [[ .start ]]-[[ .end ]]
+              ip_start=$(echo [[ .start ]] | cut -d'.' -f4)
+              ip_end=$(echo [[ .end ]] | cut -d'.' -f4)
+              ip_prefix=$(echo [[ .start ]] | cut -d'.' -f1-3)
+              for i in $(seq ${ip_start} ${ip_end}); do
+                echo "    - \"${ip_prefix}.${i}\"" >> /tmp/cm.yaml
+              done
+              [[- end ]]
+
+              [[- if .Values.wcIpCheck.deriveFromControlPlaneEndpoint.enabled ]]
+              [[- with .Values.wcIpCheck.deriveFromControlPlaneEndpoint ]]
+
+              # calculate the range based on MC's control plane ip
+              cp_ip=$(kubectl get cm kubeadm-config -n kube-system -ojsonpath={.data.ClusterConfiguration} | grep controlPlaneEndpoint: | cut -d' ' -f2 | cut -d':' -f1)
+              last_ip_chunk=$(echo ${cp_ip} | cut -d'.' -f4)
+              ip_prefix=$(echo ${cp_ip} | cut -d'.' -f1-3)
+              ip_start=$(( last_ip_chunk + [[ .offset ]] ))
+              ip_end=$(( last_ip_chunk + [[ .offset ]] + [[ .number ]] > 254 ? 254 : last_ip_chunk + [[ .offset ]] + [[ .number ]] ))
+              for i in $(seq ${ip_start} ${ip_end}); do
+                echo "    - \"${ip_prefix}.${i}\"" >> /tmp/cm.yaml
+              done
+              [[- end ]]
+              [[- end ]]
+              
+              set +x
+              echo -e "\n\nApplying following configmap:\n-----------------------------"
+              cat /tmp/cm.yaml
+              kubectl apply -f /tmp/cm.yaml
+
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "10m"
+            limits:
+              memory: "256Mi"
+              cpu: "100m"
+---
+[[- end ]]
