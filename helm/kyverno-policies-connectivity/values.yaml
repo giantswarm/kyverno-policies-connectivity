@@ -28,7 +28,7 @@ wcIpCheck:
   #   end: 10.10.222.249
   # Following options are used for calculating the range dynamically from the MC's control plane ip
   deriveFromControlPlaneEndpoint:  # should the ipRange be automatically figured out from the IP pertaining to control plane?
-    enabled: true
+    enabled: false
     offset: 2  # first ip of the range will be calculated as controlPlaneEndpoint.host + this
     number: 8  # how large the ip range should be
   exclude:
