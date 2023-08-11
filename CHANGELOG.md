@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Fix missing `apiVersion` in manifest for `check-wc-cp-ip-clusters` policy.
+
 ## [0.5.2] - 2023-08-04
 
 ### Added
