@@ -1,5 +1,5 @@
 # THIS FILE IS GENERATED WITH 'make generate' - DO NOT EDIT MANUALLY
-{{- if eq (include "isWcIpCheckEnabled" $) "true" -}}
+{{- if eq (include "isWcIpCheckEnabled" $) "true" }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
