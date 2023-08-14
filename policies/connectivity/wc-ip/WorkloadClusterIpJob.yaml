@@ -1,4 +1,4 @@
-[[- if eq (include "isWcIpCheckEnabled" $) "true" -]]
+[[- if eq (include "isWcIpCheckEnabled" $) "true" ]]
 apiVersion: v1
 kind: ServiceAccount
 metadata:
