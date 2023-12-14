@@ -38,6 +38,6 @@ wcIpCheck:
       runAsGroup: 1000
       runAsUser: 1000
     kubectlImage:
-      registry: quay.io
+      registry: gsoci.azurecr.io
       name: giantswarm/kubectl
       tag: 1.23.5
