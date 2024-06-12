@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- Remove unused tests under helm directory.
+
 ## [0.5.4] - 2024-01-09
 
 ### Changed
