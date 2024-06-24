@@ -8,7 +8,9 @@ proxy:
 
 mimir:
   enabled: false
-  prometheusBuddyName: mimir-to-grafana-cloud
+  prometheus: 
+    name: mimir-to-grafana-cloud
+    namespace: mimir
 
 cluster:
   name: ""
