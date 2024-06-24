@@ -15,7 +15,7 @@ spec:
             kinds:
             - monitoring.coreos.com/v1/Prometheus
             names:
-            - [[ .Valeus.mimir.prometheus.name ]]
+            - [[ .Values.mimir.prometheus.name ]]
       context:
         - name: kubeadmConfig
           configMap:
