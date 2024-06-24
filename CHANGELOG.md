@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove unused tests under helm directory.
 
+### Changed
+
+- Inject proxy url to the `mimir-to-grafana-cloud` prometheus CR.
+
 ## [0.5.4] - 2024-01-09
 
 ### Changed

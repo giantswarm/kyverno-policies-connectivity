@@ -6,6 +6,10 @@ certManager:
 proxy:
   enabled: false
 
+mimir:
+  enabled: false
+  prometheusBuddyName: mimir-to-grafana-cloud
+
 cluster:
   name: ""
   proxy:
