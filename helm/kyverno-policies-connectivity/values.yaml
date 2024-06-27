@@ -8,8 +8,6 @@ proxy:
 
 mimir:
   enabled: false
-  prometheus:
-    name: mimir-to-grafana-cloud
 
 cluster:
   name: ""

@@ -9,14 +9,14 @@ spec:
   validationFailureAction: Enforce
   rules:
     {{- if .Values.mimir.enabled }}
-    - name: inject-proxy-env-to-prometheus-buddy
+    - name: inject-proxy-env-to-prometheus-remotewrite
       match:
         all:
         - resources:
             kinds:
-            - monitoring.coreos.com/v1/Prometheus
-            names:
-            - {{ .Values.mimir.prometheus.name }}
+            - monitoring.coreos.com/*/Prometheus
+          namespaces:
+          - mimir
       context:
         - name: kubeadmConfig
           configMap:
@@ -45,7 +45,7 @@ spec:
             value: {{ printf "\"%s,%s,%s\"" $proxy.noProxy "svc,127.0.0.1,localhost" "{{dynamicNoProxy}}" }}
       mutate:
         patchStrategicMerge:
-          spec: 
+          spec:
             remoteWrite:
               - (name): "*"
                 {{- if $proxy.http }}
