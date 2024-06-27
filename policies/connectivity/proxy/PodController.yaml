@@ -50,9 +50,6 @@ spec:
                 [[- if $proxy.http ]]
                 proxyUrl: [[ $proxy.http ]]
                 [[- end ]]
-                [[- if $proxy.https ]]
-                proxyUrl: [[ $proxy.https ]]
-                [[- end ]]
     [[- end ]]
     - name: inject-proxy-env-to-containers
       exclude:
