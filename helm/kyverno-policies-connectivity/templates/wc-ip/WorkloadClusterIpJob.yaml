@@ -92,11 +92,25 @@ spec:
       restartPolicy: Never
       serviceAccountName: "{{ .Release.Name }}-read-write-configmap"
       securityContext:
+        runAsNonRoot: true
         runAsUser: {{ .Values.wcIpCheck.installJob.securityContext.runAsUser }}
         runAsGroup: {{ .Values.wcIpCheck.installJob.securityContext.runAsGroup }}
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: pre-install-job
           image: "{{ .Values.wcIpCheck.installJob.kubectlImage.registry }}/{{ .Values.wcIpCheck.installJob.kubectlImage.name }}:{{ .Values.wcIpCheck.installJob.kubectlImage.tag }}"
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            runAsUser: {{ .Values.wcIpCheck.installJob.securityContext.runAsUser }}
+            runAsGroup: {{ .Values.wcIpCheck.installJob.securityContext.runAsGroup }}
+            seccompProfile:
+              type: RuntimeDefault
           command:
             - "/bin/bash"
             - "-xec"
@@ -141,11 +155,13 @@ spec:
               done
               {{- end }}
               {{- end }}
-              
+
               set +x
               echo -e "\n\nApplying following configmap:\n-----------------------------"
               cat /tmp/cm.yaml
-              kubectl apply -f /tmp/cm.yaml
+              # piping stderr to stdout means kubectl's errors are surfaced
+              # in the pod's logs.
+              kubectl apply --server-side=true --field-manager='kubectl-client-side-apply' --force-conflicts -f /tmp/cm.yaml 2>&1
 
           resources:
             requests:

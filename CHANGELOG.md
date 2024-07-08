@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update kubectl container image to version v1.26.0 for WorkloadCluster Ip Job
+- Increase pod and container SecurityContext settings for WorkloadCluster Ip Job
+- Execute `kubectl apply` with `--server-side=true --field-manager='kubectl-client-side-apply' --force-conflicts` flags in WorkloadCluster Ip Job
+
 ### Removed
 
 - Remove unused tests under helm directory.

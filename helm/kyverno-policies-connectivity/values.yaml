@@ -40,4 +40,4 @@ wcIpCheck:
     kubectlImage:
       registry: gsoci.azurecr.io
       name: giantswarm/kubectl
-      tag: 1.23.5
+      tag: 1.26.0
