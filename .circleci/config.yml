@@ -7,7 +7,7 @@ orbs:
 jobs:
   verify:
     docker:
-      - image: cimg/base:2024.06
+      - image: cimg/base:2024.09
     steps:
       - checkout
       - run:
