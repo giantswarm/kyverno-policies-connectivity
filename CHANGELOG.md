@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.1] - 2024-10-30
+
 ### Changed
 
 - Add `/tmp` emptyDir volume to WorkloadCluster Ip Job to make kubectl able to write temporary files.
@@ -153,7 +155,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial policies moved from [`kyverno-policies`](https://github.com/giantswarm/kyverno-policies).
 
-[Unreleased]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.6.1...HEAD
+[0.6.1]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.5.4...v0.6.0
 [0.5.4]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.5.3...v0.5.4
 [0.5.3]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.5.2...v0.5.3
