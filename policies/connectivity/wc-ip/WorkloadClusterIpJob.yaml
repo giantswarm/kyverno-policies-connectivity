@@ -96,6 +96,9 @@ spec:
         runAsGroup: [[ .Values.wcIpCheck.installJob.securityContext.runAsGroup ]]
         seccompProfile:
           type: RuntimeDefault
+      volumes:
+        - name: tmp
+          emptyDir: {}
       containers:
         - name: pre-install-job
           image: "[[ .Values.wcIpCheck.installJob.kubectlImage.registry ]]/[[ .Values.wcIpCheck.installJob.kubectlImage.name ]]:[[ .Values.wcIpCheck.installJob.kubectlImage.tag ]]"
@@ -110,6 +113,9 @@ spec:
             runAsGroup: [[ .Values.wcIpCheck.installJob.securityContext.runAsGroup ]]
             seccompProfile:
               type: RuntimeDefault
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
           command:
             - "/bin/bash"
             - "-xec"
