@@ -74,6 +74,20 @@ roleRef:
   name: "{{ .Release.Name }}-read-write-configmap"
   apiGroup: rbac.authorization.k8s.io
 ---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: "{{ .Release.Name }}-prepare-cm-preinstall-hook"
+  namespace: "{{ $.Release.Namespace }}"
+spec:
+  podSelector:
+    matchLabels:
+      batch.kubernetes.io/job-name: "{{ .Release.Name }}-prepare-cm-preinstall-hook"
+  policyTypes:
+  - Egress
+  egress:
+  - {}
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
