@@ -57,6 +57,9 @@ spec:
         - name: dnsDomain
           variable:
             value: {{`"{{ clusterConfiguration.networking.dnsDomain }}"`}}
+        - name: dnsDomainDot
+          variable:
+            value: {{`"{{ clusterConfiguration.networking.dnsDomain }}."`}}
         - name: podSubnet
           variable:
             value: {{`"{{ clusterConfiguration.networking.podSubnet }}"`}}
@@ -65,7 +68,7 @@ spec:
             value: {{`"{{ clusterConfiguration.networking.serviceSubnet }}"`}}
         - name: dynamicNoProxy
           variable:
-            value: {{`"{{apiEndpoint}},{{dnsDomain}},{{podSubnet}},{{serviceSubnet}}"`}}
+            value: {{`"{{apiEndpoint}},{{dnsDomain}},{{dnsDomainDot}},{{podSubnet}},{{serviceSubnet}}"`}}
         - name: fullNoProxy
           variable:
             value: {{ printf "\"%s,%s,%s\"" $proxy.noProxy "svc,127.0.0.1,localhost" "{{dynamicNoProxy}}" }}
