@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add dnsDomainRoot to fix an issue with applications using .cluster.local.
+
 ## [0.6.2] - 2024-10-31
 
 ### Changed
