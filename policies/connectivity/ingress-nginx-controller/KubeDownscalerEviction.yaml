@@ -1,0 +1,21 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: ingress-nginx-kube-downscaler-eviction
+spec:
+  validationFailureAction: Enforce
+  rules:
+    - name: add-downscaler-exclude-annotation
+      match:
+        all:
+        - resources:
+            kinds:
+              - Deployment
+              - autoscaling/v2/HorizontalPodAutoscaler
+            names:
+              - ingress-nginx-controller
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            annotations:
+              downscaler/exclude: "true"

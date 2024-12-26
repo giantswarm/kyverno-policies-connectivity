@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add dnsDomainRoot to fix an issue with applications using .cluster.local.
+- Add `ingress-nginx-kube-downscaler-eviction` ClusterPolicy to avoid conflict between the kube-downscaler and ingress-nginx-controller.
 
 ## [0.6.2] - 2024-10-31
 
