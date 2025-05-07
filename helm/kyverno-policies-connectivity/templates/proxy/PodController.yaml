@@ -49,9 +49,7 @@ spec:
           selector:
             matchExpressions:
               - key: cnpg.io/cluster
-                operator: In
-                values:
-                - grafana-postgresql
+                operator: Exists
       context:
         - name: kubeadmConfig
           configMap:
