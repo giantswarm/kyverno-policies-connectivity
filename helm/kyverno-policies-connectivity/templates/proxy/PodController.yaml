@@ -43,6 +43,15 @@ spec:
             - {{ . | quote }}
           {{- end }}
 {{- end }}
+        - resources:
+            kinds:
+            - Pod
+          selector:
+            matchExpressions:
+              - key: cnpg.io/cluster
+                operator: In
+                values:
+                - grafana-postgresql
       context:
         - name: kubeadmConfig
           configMap:

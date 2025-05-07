@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update `inject-proxy-env` policy to have `grafana-postgresql` pods in its scope.
+
 ## [0.7.0] - 2024-12-16
 
 ### Added
