@@ -46,10 +46,10 @@ spec:
         - resources:
             kinds:
             - Pod
-          selector:
-            matchExpressions:
-              - key: cnpg.io/cluster
-                operator: Exists
+            selector:
+              matchExpressions:
+                - key: cnpg.io/cluster
+                  operator: Exists
       context:
         - name: kubeadmConfig
           configMap:
