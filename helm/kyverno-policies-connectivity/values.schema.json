@@ -89,11 +89,9 @@
               },
               "infraClusterNames": {
                 "type": "array",
-                "items": [
-                  {
-                    "type": "string"
-                  }
-                ]
+                "items": {
+                  "type": "string"
+                }
               },
               "controlPlaneIpRange": {
                 "type": "object",
