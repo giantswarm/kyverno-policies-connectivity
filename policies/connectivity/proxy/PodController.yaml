@@ -12,30 +12,21 @@ spec:
         any:
         - resources:
             kinds:
-            - Deployment
-            - StatefulSet
-            - DaemonSet
-            - Job
+            - Pod
             names:
             [[- range .Values.exclude.names ]]
             - [[ . | quote ]]
             [[- end ]]
         - resources:
             kinds:
-            - Deployment
-            - StatefulSet
-            - DaemonSet
-            - Job
+            - Pod
             annotations:
               policies.kyverno.io/inject-proxy-env: exclude
       match:
         all:
         - resources:
             kinds:
-            - Deployment
-            - StatefulSet
-            - DaemonSet
-            - Job
+            - Pod
 [[- if $proxy.namespaces ]]
           namespaces:
           [[- range $proxy.namespaces ]]
