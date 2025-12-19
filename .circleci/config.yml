@@ -34,6 +34,7 @@ workflows:
         attach_workspace: true
         chart: kyverno-policies-connectivity
         context: architect
+        executor: app-build-suite
           # Needed to trigger job also on git tag.
         filters:
           tags:

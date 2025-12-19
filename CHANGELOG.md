@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Update `inject-proxy-env` policy to inject at the pod level only.
+- Migrate to App Build Suite (ABS) for build pipeline.
+- Update Chart.yaml annotations to OpenContainers format (`io.giantswarm.application.team`).
 
 ## [0.9.1] - 2025-08-18
 
