@@ -1,7 +1,7 @@
 apiVersion: v2
 name: kyverno-policies-connectivity
-version: 0.10.0
-appVersion: 0.10.0
+version: 0.10.1
+appVersion: 0.10.1
 description: Giant Swarm policies for connectivity management.
 home: https://github.com/giantswarm/kyverno-policies-connectivity
 icon: https://s.giantswarm.io/app-icons/kyverno/1/light.svg
