@@ -66,70 +66,68 @@ spec:
       mutate:
         patchStrategicMerge:
           spec:
-            template:
-              spec:
-                containers:
-                  - (name): "*"
-                    env:
-                      {{- if $proxy.http }}
-                      - name: HTTP_PROXY
-                        value: {{ $proxy.http }}
-                      - name: http_proxy
-                        value: {{ $proxy.http }}
-                      {{- end }}
-                      {{- if $proxy.https }}
-                      - name: HTTPS_PROXY
-                        value: {{ $proxy.https }}
-                      - name: https_proxy
-                        value: {{ $proxy.https }}
-                      {{- end }}
-                      {{- if $proxy.noProxy }}
-                      - name: NO_PROXY
-                        value: {{`"{{ fullNoProxy }}"`}}
-                      - name: no_proxy
-                        value: {{`"{{ fullNoProxy }}"`}}
-                      {{- end }}
-                initContainers:
-                  - (name): "*"
-                    env:
-                      {{- if $proxy.http }}
-                      - name: HTTP_PROXY
-                        value: {{ $proxy.http }}
-                      - name: http_proxy
-                        value: {{ $proxy.http }}
-                      {{- end }}
-                      {{- if $proxy.https }}
-                      - name: HTTPS_PROXY
-                        value: {{ $proxy.https }}
-                      - name: https_proxy
-                        value: {{ $proxy.https }}
-                      {{- end }}
-                      {{- if $proxy.noProxy }}
-                      - name: NO_PROXY
-                        value: {{`"{{ fullNoProxy }}"`}}
-                      - name: no_proxy
-                        value: {{`"{{ fullNoProxy }}"`}}
-                      {{- end }}
-                ephemeralContainers:
-                  - (name): "*"
-                    env:
-                      {{- if $proxy.http }}
-                      - name: HTTP_PROXY
-                        value: {{ $proxy.http }}
-                      - name: http_proxy
-                        value: {{ $proxy.http }}
-                      {{- end }}
-                      {{- if $proxy.https }}
-                      - name: HTTPS_PROXY
-                        value: {{ $proxy.https }}
-                      - name: https_proxy
-                        value: {{ $proxy.https }}
-                      {{- end }}
-                      {{- if $proxy.noProxy }}
-                      - name: NO_PROXY
-                        value: {{`"{{ fullNoProxy }}"`}}
-                      - name: no_proxy
-                        value: {{`"{{ fullNoProxy }}"`}}
-                      {{- end }}
+            containers:
+              - (name): "*"
+                env:
+                  {{- if $proxy.http }}
+                  - name: HTTP_PROXY
+                    value: {{ $proxy.http }}
+                  - name: http_proxy
+                    value: {{ $proxy.http }}
+                  {{- end }}
+                  {{- if $proxy.https }}
+                  - name: HTTPS_PROXY
+                    value: {{ $proxy.https }}
+                  - name: https_proxy
+                    value: {{ $proxy.https }}
+                  {{- end }}
+                  {{- if $proxy.noProxy }}
+                  - name: NO_PROXY
+                    value: {{`"{{ fullNoProxy }}"`}}
+                  - name: no_proxy
+                    value: {{`"{{ fullNoProxy }}"`}}
+                  {{- end }}
+            initContainers:
+              - (name): "*"
+                env:
+                  {{- if $proxy.http }}
+                  - name: HTTP_PROXY
+                    value: {{ $proxy.http }}
+                  - name: http_proxy
+                    value: {{ $proxy.http }}
+                  {{- end }}
+                  {{- if $proxy.https }}
+                  - name: HTTPS_PROXY
+                    value: {{ $proxy.https }}
+                  - name: https_proxy
+                    value: {{ $proxy.https }}
+                  {{- end }}
+                  {{- if $proxy.noProxy }}
+                  - name: NO_PROXY
+                    value: {{`"{{ fullNoProxy }}"`}}
+                  - name: no_proxy
+                    value: {{`"{{ fullNoProxy }}"`}}
+                  {{- end }}
+            ephemeralContainers:
+              - (name): "*"
+                env:
+                  {{- if $proxy.http }}
+                  - name: HTTP_PROXY
+                    value: {{ $proxy.http }}
+                  - name: http_proxy
+                    value: {{ $proxy.http }}
+                  {{- end }}
+                  {{- if $proxy.https }}
+                  - name: HTTPS_PROXY
+                    value: {{ $proxy.https }}
+                  - name: https_proxy
+                    value: {{ $proxy.https }}
+                  {{- end }}
+                  {{- if $proxy.noProxy }}
+                  - name: NO_PROXY
+                    value: {{`"{{ fullNoProxy }}"`}}
+                  - name: no_proxy
+                    value: {{`"{{ fullNoProxy }}"`}}
+                  {{- end }}
 ---
 {{- end }}
