@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.1] - 2026-01-06
+
 ### Fixed
 
 - Fix proxy variable injection for the pod spec.
@@ -197,7 +199,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial policies moved from [`kyverno-policies`](https://github.com/giantswarm/kyverno-policies).
 
-[Unreleased]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.10.1...HEAD
+[0.10.1]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.8.0...v0.9.0
