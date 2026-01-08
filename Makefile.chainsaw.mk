@@ -31,7 +31,7 @@ install-kyverno:
 
 .PHONY: install-policies
 override install-policies:
-	helm upgrade --install $(KYVERNO_POLICIES_APP_NAME) ./helm/$(KYVERNO_POLICIES_APP_NAME)
+	helm upgrade --install $(KYVERNO_POLICIES_APP_NAME) ./helm/$(KYVERNO_POLICIES_APP_NAME) --values ./tests/values.yaml
 
 .PHONY: kind-get-kubeconfig
 kind-get-kubeconfig:
