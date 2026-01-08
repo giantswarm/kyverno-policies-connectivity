@@ -15,7 +15,7 @@ clean: ## Delete test manifests from kind cluster.
 	./hack/cleanup-local.sh
 
 .PHONY: kind-create
-kind-create: ## create kind cluster if needed
+override kind-create: ## create kind cluster if needed
 	KIND_CLUSTER_NAME=$(KIND_CLUSTER_NAME) ./hack/kind-with-registry.sh
 # 	./hack/setup-kind.sh
 
@@ -30,7 +30,7 @@ install-kyverno:
 	kubectl wait --context kind-$(KIND_CLUSTER_NAME) --for=condition=ready pod -l app.kubernetes.io/name=kyverno -l app.kubernetes.io/component=admission-controller -n kyverno --timeout 300s
 
 .PHONY: install-policies
-install-policies:
+override install-policies:
 	helm upgrade --install $(KYVERNO_POLICIES_APP_NAME) ./helm/$(KYVERNO_POLICIES_APP_NAME)
 
 .PHONY: kind-get-kubeconfig
