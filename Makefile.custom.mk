@@ -26,7 +26,7 @@ clean: ## Delete test manifests from kind cluster.
 .PHONY: kind-create
 kind-create: ## create kind cluster if needed
 	KIND_CLUSTER_NAME=$(KIND_CLUSTER_NAME) ./hack/kind-with-registry.sh
-	./hack/setup-kind.sh
+# 	./hack/setup-kind.sh
 
 .PHONY: tilt-up
 tilt-up: ## Start Tilt
