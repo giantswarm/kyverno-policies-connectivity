@@ -1,1 +1,5 @@
 # Placeholder for extra testing values
+
+# Enable proxy policy
+proxy:
+  enabled: true
