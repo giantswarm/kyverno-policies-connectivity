@@ -3,6 +3,9 @@ certManager:
   syncSecret: false
   targetNamespace: "org-*"
 
+clusterCaPublic:
+  enabled: false
+
 proxy:
   enabled: false
 
