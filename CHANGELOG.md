@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Remove helm hook "delete-policy" annotation from `ClusterRoles`, otherwise they are removed after the chart is installed or upgraded successfully.
+
 ## [0.10.1] - 2026-01-06
 
 ### Fixed
