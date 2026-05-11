@@ -1,0 +1,71 @@
+# THIS FILE IS GENERATED WITH 'make generate' - DO NOT EDIT MANUALLY
+{{- if .Values.clusterCaPublic.enabled }}
+# Grant kyverno-background-controller permission to manage ConfigMaps
+# so it can generate and sync the CA public ConfigMap.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: "{{ .Release.Name }}-generate-cluster-ca-public-configmap"
+  annotations:
+    {{- include "preinstallHookAnnotations" $ | nindent 4 }}
+    "helm.sh/hook-weight": "-2"
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["create", "update", "get", "delete", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: "{{ .Release.Name }}-generate-cluster-ca-public-configmap"
+  annotations:
+    {{- include "preinstallHookAnnotations" $ | nindent 4 }}
+    "helm.sh/hook-weight": "-1"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: "{{ .Release.Name }}-generate-cluster-ca-public-configmap"
+subjects:
+- kind: ServiceAccount
+  name: kyverno-background-controller
+  namespace: kyverno
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: generate-cluster-ca-public-configmap
+spec:
+  rules:
+  - name: generate-cluster-ca-public-configmap
+    match:
+      any:
+      - resources:
+          kinds:
+          - Secret
+          names:
+          - "*-ca"
+          selector:
+            matchExpressions:
+            - key: cluster.x-k8s.io/cluster-name
+              operator: Exists
+    context:
+    - name: clusterName
+      variable:
+        jmesPath: 'request.object.metadata.labels."cluster.x-k8s.io/cluster-name"'
+    - name: caCert
+      variable:
+        jmesPath: 'base64_decode(request.object.data."tls.crt")'
+    generate:
+      apiVersion: v1
+      kind: ConfigMap
+      name: "{{ `{{` }}clusterName{{ `}}` }}-ca-public"
+      namespace: "{{ `{{` }}request.object.metadata.namespace{{ `}}` }}"
+      synchronize: true
+      data:
+        metadata:
+          labels:
+            cluster.x-k8s.io/cluster-name: "{{ `{{` }}clusterName{{ `}}` }}"
+            app.giantswarm.io/managed-by: kyverno
+        data:
+          ca.crt: "{{ `{{` }}caCert{{ `}}` }}"
+{{- end }}

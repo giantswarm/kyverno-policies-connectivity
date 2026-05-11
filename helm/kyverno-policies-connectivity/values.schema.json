@@ -23,6 +23,17 @@
                 }
             }
         },
+        "clusterCaPublic": {
+            "title": "ClusterCaPublic",
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "description": "Generate a public ConfigMap from CAPI cluster CA Secrets containing only the CA certificate",
+                    "title": "Enabled",
+                    "type": "boolean"
+                }
+            }
+        },
         "cluster": {
             "title": "Cluster",
             "type": "object",

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `generate-cluster-ca-public-configmap` Kyverno policy that generates a `<cluster-name>-ca-public` ConfigMap from CAPI cluster CA Secrets, containing only the public CA certificate. Gated by `clusterCaPublic.enabled` value.
+
 ## [0.10.1] - 2026-01-06
 
 ### Fixed
