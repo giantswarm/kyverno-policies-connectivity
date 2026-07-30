@@ -42,7 +42,7 @@ jobs:
       - name: Install extra resources
         run: |
           make install-extras
-      - name: Install Kyverno ValidatingPolicies
+      - name: Install Kyverno CEL Policies
         run: |
           make install-cel-policies
       - name: Run Chainsaw tests
