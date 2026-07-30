@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changes
+
+- New chart value `cel.enabled` to use new kyverno cel policy types
+
 ### Fixed
 
 - Proxy: add `barman-cloud` to the injected `NO_PROXY`/`no_proxy` so the CloudNativePG operator reaches the barman-cloud plugin at `barman-cloud:9090` without going through the proxy.

@@ -14,7 +14,7 @@ certManager:
   sourceNamespace: "default"
   targetNamespace: "org-*"
 
-vpol:
+cel:
   enabled: true
 
 wcIpCheck:

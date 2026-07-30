@@ -28,6 +28,15 @@
             "type": "object",
             "additionalProperties": true
         },
+        "cel": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                }
+            }
+        },
         "certManager": {
             "type": "object",
             "additionalProperties": false,
@@ -161,15 +170,6 @@
         },
         "subscriptionID": {
             "type": "string"
-        },
-        "vpol": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "enabled": {
-                    "type": "boolean"
-                }
-            }
         },
         "wcIpCheck": {
             "type": "object",
