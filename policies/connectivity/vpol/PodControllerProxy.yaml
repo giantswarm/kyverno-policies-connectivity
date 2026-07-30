@@ -9,9 +9,13 @@ metadata:
     policies.kyverno.io/category: Connectivity
     policies.kyverno.io/severity: Medium
     policies.kyverno.io/subject: Pod
+    policies.kyverno.io/minversion: 1.16.0
     policies.kyverno.io/description: >-
       This policy injects proxy environment variables into all containers of a pod.
 spec:
+  autogen:
+    podControllers:
+      controllers: []
   failurePolicy: Fail
   matchConstraints:
     resourceRules:
@@ -26,9 +30,9 @@ spec:
     - name: exclude-annotation
       expression: >-
           (has(object.metadata.annotations) && object.metadata.annotations["policies.kyverno.io/inject-proxy-env"] == "exclude") == false
-    - name: exclude-namespace
+    - name: allowed-namespace
       expression: >-
-          variables.namespaceMatched == false
+          variables.namespaceMatched
   variables:
     - name: kubeadmConfig
       expression: >-

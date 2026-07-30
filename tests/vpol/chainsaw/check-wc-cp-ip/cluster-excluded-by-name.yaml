@@ -1,0 +1,9 @@
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: VSphereCluster
+metadata:
+  name: excluded-by-name
+  namespace: default
+spec:
+  controlPlaneEndpoint:
+    host: 203.0.113.9
+    port: 6443
