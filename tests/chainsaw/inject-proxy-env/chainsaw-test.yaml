@@ -1,0 +1,46 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: inject-proxy-env
+spec:
+  steps:
+  - name: setup-prerequisites
+    description: Ensure kubeadm-config ConfigMap exists so the policy context can be resolved
+    try:
+    - apply:
+        file: kubeadm-config.yaml
+
+  - name: inject-proxy-env-into-pod
+    description: A Pod in a matched namespace receives proxy environment variables
+    try:
+    - apply:
+        file: pod-proxy-inject.yaml
+    - assert:
+        file: pod-proxy-inject-assert.yaml
+    finally:
+    - delete:
+        file: pod-proxy-inject.yaml
+
+  - name: exclude-pod-by-name
+    description: A Pod whose name matches an excluded name pattern (capi-*) is not mutated
+    try:
+    - apply:
+        file: pod-excluded-by-name.yaml
+    - assert:
+        template: true
+        file: pod-excluded-by-name-assert.yaml
+    finally:
+    - delete:
+        file: pod-excluded-by-name.yaml
+
+  - name: exclude-pod-by-annotation
+    description: A Pod with the opt-out annotation is not mutated
+    try:
+    - apply:
+        file: pod-excluded-by-annotation.yaml
+    - assert:
+        template: true
+        file: pod-excluded-by-annotation-assert.yaml
+    finally:
+    - delete:
+        file: pod-excluded-by-annotation.yaml

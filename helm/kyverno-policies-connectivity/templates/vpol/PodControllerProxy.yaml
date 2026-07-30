@@ -30,6 +30,9 @@ spec:
     - name: exclude-namespace
       expression: >-
           variables.namespaceMatched == false
+  autogen:
+    podControllers:
+      controllers: []
   variables:
     - name: kubeadmConfig
       expression: >-
