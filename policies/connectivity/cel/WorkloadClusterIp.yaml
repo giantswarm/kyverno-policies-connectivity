@@ -1,4 +1,4 @@
-[[- if and (eq (include "isWcIpCheckEnabled" $) "true") .Values.vpol.enabled ]]
+[[- if and (eq (include "isWcIpCheckEnabled" $) "true") .Values.cel.enabled ]]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

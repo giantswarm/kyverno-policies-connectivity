@@ -196,7 +196,7 @@
               }
             }
         },
-        "vpol": {
+        "cel": {
             "type": "object",
             "properties": {
                 "enabled": {

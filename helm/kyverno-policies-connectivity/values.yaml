@@ -46,5 +46,5 @@ wcIpCheck:
       name: giantswarm/kubectl
       tag: 1.26.0
 
-vpol:
+cel:
   enabled: false

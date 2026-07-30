@@ -1,4 +1,4 @@
-[[- if and .Values.proxy.enabled .Values.vpol.enabled ]]
+[[- if and .Values.proxy.enabled .Values.cel.enabled ]]
 [[- $proxy := deepCopy .Values.cluster.proxy | mustMerge .Values.proxy ]]
 apiVersion: policies.kyverno.io/v1beta1
 kind: MutatingPolicy
