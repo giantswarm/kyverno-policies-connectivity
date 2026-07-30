@@ -1,5 +1,13 @@
 {{/* vim: set filetype=mustache: */}}
 
+{{- define "isWcIpCheckEnabled" -}}
+    {{- if and .Values.wcIpCheck.enabled (or .Values.wcIpCheck.deriveFromControlPlaneEndpoint.enabled .Values.wcIpCheck.ipRanges) }}
+        {{- printf "true" -}}
+    {{ else }}
+        {{- printf "false" -}}
+    {{- end }}
+{{- end }}
+
 {{- define "preinstallHookAnnotations" -}}
 "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded,hook-failed"
 "helm.sh/hook": "pre-install,pre-upgrade"

@@ -1,15 +1,29 @@
-# Example of how to check if a Policy is ready using templates
-# Note: The policy needs to already exist in the test cluster.
-# apiVersion: chainsaw.kyverno.io/v1alpha1
-# kind: Test
-# metadata:
-#   name: check-policy-is-ready
-# spec:
-#   steps:
-#   - name: check if policy is ready
-#     use:
-#       template: ../_steps-templates/cluster-policy-ready.yaml
-#       with:
-#         bindings:
-#         - name: name
-#           value: my-policy-name
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: check-policy-is-ready
+spec:
+  steps:
+  - name: check-sync-cert-manager-route53-secret
+    use:
+      template: ../_steps-templates/cluster-policy-ready.yaml
+      with:
+        bindings:
+        - name: name
+          value: sync-cert-manager-route53-secret
+
+  - name: check-inject-proxy-env
+    use:
+      template: ../_steps-templates/cluster-policy-ready.yaml
+      with:
+        bindings:
+        - name: name
+          value: inject-proxy-env
+
+  - name: check-kyverno-policies-connectivity-check-wc-cp-ip
+    use:
+      template: ../_steps-templates/cluster-policy-ready.yaml
+      with:
+        bindings:
+        - name: name
+          value: kyverno-policies-connectivity-check-wc-cp-ip

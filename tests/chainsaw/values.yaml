@@ -1,1 +1,23 @@
-# Placeholder for extra testing values
+proxy:
+  enabled: true
+  namespaces: ["default", "kube-system", "kube-public"]
+
+cluster:
+  name: "test"
+  proxy:
+    http: "http://proxy.example.com:8080"
+    https: "https://proxy.example.com:8080"
+    noProxy: ""
+
+certManager:
+  syncSecret: true
+  sourceNamespace: "default"
+  targetNamespace: "org-*"
+
+vpol:
+  enabled: false
+
+wcIpCheck:
+  enabled: true
+  deriveFromControlPlaneEndpoint:
+    enabled: true

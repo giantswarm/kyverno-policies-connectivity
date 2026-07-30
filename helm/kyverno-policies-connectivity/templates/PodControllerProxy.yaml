@@ -1,10 +1,17 @@
 # THIS FILE IS GENERATED WITH 'make generate' - DO NOT EDIT MANUALLY
-{{- if .Values.proxy.enabled }}
+{{- if and .Values.proxy.enabled (not .Values.vpol.enabled) }}
 {{- $proxy := deepCopy .Values.cluster.proxy | mustMerge .Values.proxy }}
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: inject-proxy-env
+  annotations:
+    policies.kyverno.io/title: Inject Proxy Environment Variables
+    policies.kyverno.io/category: Connectivity
+    policies.kyverno.io/severity: Medium
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      This policy injects proxy environment variables into all containers of a pod.
 spec:
   validationFailureAction: Enforce
   rules:
@@ -29,10 +36,10 @@ spec:
             kinds:
             - Pod
 {{- if $proxy.namespaces }}
-          namespaces:
-          {{- range $proxy.namespaces }}
-            - {{ . | quote }}
-          {{- end }}
+            namespaces:
+            {{- range $proxy.namespaces }}
+              - {{ . | quote }}
+            {{- end }}
 {{- end }}
       context:
         - name: kubeadmConfig

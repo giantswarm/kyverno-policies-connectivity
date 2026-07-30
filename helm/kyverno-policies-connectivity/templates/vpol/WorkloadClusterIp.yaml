@@ -1,0 +1,67 @@
+# THIS FILE IS GENERATED WITH 'make generate' - DO NOT EDIT MANUALLY
+{{- if and (eq (include "isWcIpCheckEnabled" $) "true") .Values.vpol.enabled }}
+apiVersion: policies.kyverno.io/v1beta1
+kind: ValidatingPolicy
+metadata:
+  name: {{ .Release.Name }}-check-wc-cp-ip
+  annotations:
+    policies.kyverno.io/title: Block cluster resource creation if IP for control plane is not comming from a pre-defined range.
+    policies.kyverno.io/category: Connectivity
+    policies.kyverno.io/severity: Medium
+    policies.kyverno.io/description: We want to block the creation of workload clusters (WC) in case they use statically selected IP from
+     a range that does not belong to the related management cluster. This should prevent IP clashes of WC's control-planes.
+spec:
+  validationActions:
+    {{- if or (eq .Values.wcIpCheck.validationFailureAction "Enforce") (eq .Values.wcIpCheck.validationFailureAction "Deny") }}
+    - Deny
+    {{- else }}
+    - Audit
+    {{- end }}
+  matchConstraints:
+    resourceRules:
+      {{- range .Values.wcIpCheck.infraClusterResources }}
+      - apiGroups: {{ .apiGroups | toJson }}
+        apiVersions: {{ .apiVersions | toJson }}
+        operations: ["CREATE", "UPDATE"]
+        resources: {{ .resources | toJson }}
+      {{- end }}
+  matchConditions:
+    - name: exclude-name
+      expression: >-
+        [
+        {{- range $i, $name := .Values.wcIpCheck.exclude.names }}
+        {{- if $i }},{{- end }}{{ trimSuffix "*" $name | quote }}
+        {{- end -}}
+        ].exists(prefix, string(object.metadata.name).startsWith(prefix)) == false
+    - name: exclude-annotation
+      expression: >-
+          (has(object.metadata.annotations) && object.metadata.annotations["policies.kyverno.io/check-wc-cp-ip"] == "exclude") == false
+  variables:
+    - name: wcAllowedIpsCm
+      expression: >-
+        resource.Get("v1", "configmaps", "{{ $.Release.Namespace }}", "{{ .Release.Name }}-wc-allowed-ips")
+    - name: kubeadmConfig
+      expression: >-
+        resource.Get("v1", "configmaps", "kube-system", "kubeadm-config")
+    - name: clusterConfiguration
+      expression: >-
+        yaml.parse(variables.kubeadmConfig.data["ClusterConfiguration"])
+    - name: allowedIps
+      expression: >-
+        yaml.parse(variables.wcAllowedIpsCm.data["allowed-ips"])
+    - name: mcClusterName
+      expression: >-
+        variables.clusterConfiguration.clusterName
+  validations:
+    - expression: >-
+        !has(object.spec.controlPlaneEndpoint) ||
+        !has(object.spec.controlPlaneEndpoint.host) ||
+        object.spec.controlPlaneEndpoint.host == "" ||
+        object.spec.controlPlaneEndpoint.host in variables.allowedIps ||
+        object.metadata.name == variables.mcClusterName
+      messageExpression: >-
+        "IP for workload cluster's conrol plane (" +
+        string(object.spec.?controlPlaneEndpoint.?host.orValue("")) +
+        ") is not allowed for this management cluster."
+---
+{{- end }}
