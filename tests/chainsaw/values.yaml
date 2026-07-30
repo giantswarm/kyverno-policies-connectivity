@@ -19,5 +19,10 @@ vpol:
 
 wcIpCheck:
   enabled: true
+  infraClusterNames:
+  - VSphereCluster
+  exclude:
+    names:
+    - excluded-by-name
   deriveFromControlPlaneEndpoint:
     enabled: true
