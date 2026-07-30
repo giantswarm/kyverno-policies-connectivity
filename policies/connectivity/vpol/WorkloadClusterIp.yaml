@@ -1,4 +1,21 @@
 [[- if and (eq (include "isWcIpCheckEnabled" $) "true") .Values.vpol.enabled ]]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: "[[ .Release.Name ]]-check-wc-cp-ip"
+  labels:
+    rbac.kyverno.io/aggregate-to-reports-controller: "true"
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-weight": "-2"
+rules:
+  [[- range .Values.wcIpCheck.infraClusterResources ]]
+  - apiGroups: [[ .apiGroups | toJson ]]
+    resources: [[ .resources | toJson ]]
+    verbs: ["get", "list", "watch"]
+  [[- end ]]
+---
 apiVersion: policies.kyverno.io/v1beta1
 kind: ValidatingPolicy
 metadata:
@@ -7,6 +24,7 @@ metadata:
     policies.kyverno.io/title: Block cluster resource creation if IP for control plane is not comming from a pre-defined range.
     policies.kyverno.io/category: Connectivity
     policies.kyverno.io/severity: Medium
+    policies.kyverno.io/minversion: 1.17.0
     policies.kyverno.io/description: We want to block the creation of workload clusters (WC) in case they use statically selected IP from
      a range that does not belong to the related management cluster. This should prevent IP clashes of WC's control-planes.
 spec:

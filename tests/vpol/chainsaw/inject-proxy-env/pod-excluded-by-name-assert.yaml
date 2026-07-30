@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: capi-excluded
+  namespace: default
+spec:
+  containers:
+  - name: test-container
+    image: busybox:latest
+    (length(env || `[]`)): 0
