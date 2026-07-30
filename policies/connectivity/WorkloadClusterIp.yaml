@@ -1,10 +1,12 @@
-[[- if eq (include "isWcIpCheckEnabled" $) "true" ]]
+[[- if and (eq (include "isWcIpCheckEnabled" $) "true") (not .Values.vpol.enabled) ]]
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: [[ .Release.Name ]]-check-wc-cp-ip
   annotations:
     policies.kyverno.io/title: Block cluster resource creation if IP for control plane is not comming from a pre-defined range.
+    policies.kyverno.io/category: Connectivity
+    policies.kyverno.io/severity: Medium
     policies.kyverno.io/description: We want to block the creation of workload clusters (WC) in case they use statically selected IP from
      a range that does not belong to the related management cluster. This should prevent IP clashes of WC's control-planes.
 spec:
