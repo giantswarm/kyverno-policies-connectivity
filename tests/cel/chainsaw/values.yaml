@@ -15,12 +15,14 @@ certManager:
   targetNamespace: "org-*"
 
 cel:
-  enabled: false
+  enabled: true
 
 wcIpCheck:
   enabled: true
-  infraClusterNames:
-  - VSphereCluster
+  infraClusterResources:
+  - apiGroups: ["infrastructure.cluster.x-k8s.io"]
+    apiVersions: ["*"]
+    resources: ["vsphereclusters"]
   exclude:
     names:
     - excluded-by-name

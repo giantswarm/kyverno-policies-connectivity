@@ -1,0 +1,9 @@
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: VSphereCluster
+metadata:
+  name: cluster-allowed-ip
+  namespace: default
+spec:
+  controlPlaneEndpoint:
+    host: 10.0.0.42
+    port: 6443

@@ -1,0 +1,174 @@
+# THIS FILE IS GENERATED WITH 'make generate' - DO NOT EDIT MANUALLY
+{{- if and .Values.proxy.enabled .Values.cel.enabled }}
+{{- $proxy := deepCopy .Values.cluster.proxy | mustMerge .Values.proxy }}
+apiVersion: policies.kyverno.io/v1beta1
+kind: MutatingPolicy
+metadata:
+  name: inject-proxy-env
+  annotations:
+    policies.kyverno.io/title: Inject Proxy Environment Variables
+    policies.kyverno.io/category: Connectivity
+    policies.kyverno.io/severity: Medium
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/minversion: 1.16.0
+    policies.kyverno.io/description: >-
+      This policy injects proxy environment variables into all containers of a pod.
+spec:
+  autogen:
+    podControllers:
+      controllers: []
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["pods"]
+  matchConditions:
+    - name: exclude-name
+      expression: >-
+        variables.excludedNamePrefixes.exists(prefix, string(object.metadata.name).startsWith(prefix)) == false
+    - name: exclude-annotation
+      expression: >-
+          (has(object.metadata.annotations) && object.metadata.annotations["policies.kyverno.io/inject-proxy-env"] == "exclude") == false
+    - name: allowed-namespace
+      expression: >-
+          variables.namespaceMatched
+  variables:
+    - name: kubeadmConfig
+      expression: >-
+        resource.Get("v1", "configmaps", "kube-system", "kubeadm-config")
+    - name: clusterConfiguration
+      expression: >-
+        yaml.parse(variables.kubeadmConfig.data["ClusterConfiguration"])
+    - name: apiEndpoint
+      expression: >-
+        variables.clusterConfiguration.controlPlaneEndpoint.contains(":") ?
+        variables.clusterConfiguration.controlPlaneEndpoint.split(":")[0] :
+        variables.clusterConfiguration.controlPlaneEndpoint
+    - name: dnsDomain
+      expression: >-
+        variables.clusterConfiguration.networking.dnsDomain
+    - name: dnsDomainRoot
+      expression: >-
+        variables.clusterConfiguration.networking.dnsDomain + "."
+    - name: podSubnet
+      expression: >-
+        variables.clusterConfiguration.networking.podSubnet
+    - name: serviceSubnet
+      expression: >-
+        variables.clusterConfiguration.networking.serviceSubnet
+    - name: fullNoProxy
+      expression: >-
+        "{{ $proxy.noProxy }},svc,127.0.0.1,localhost," +
+        variables.apiEndpoint + "," +
+        variables.dnsDomain + "," +
+        variables.dnsDomainRoot + "," +
+        variables.podSubnet + "," +
+        variables.serviceSubnet
+    - name: excludedNamePrefixes
+      expression: >-
+        [
+        {{- range $i, $name := .Values.exclude.names }}
+        {{- if $i }},{{- end }}{{ trimSuffix "*" $name | quote }}
+        {{- end }}]
+    - name: namespaceMatched
+      expression: >-
+{{- if $proxy.namespaces }}
+        has(object.metadata.namespace) && string(object.metadata.namespace) in [
+        {{- range $i, $namespace := $proxy.namespaces }}
+        {{- if $i }},{{- end }}{{ $namespace | quote }}
+        {{- end }}]
+{{- else }}
+        true
+{{- end }}
+    - name: proxyEnv
+      expression: >-
+        [
+        {{- if $proxy.http }}
+        {"name":"HTTP_PROXY", "value":"{{ $proxy.http }}"},
+        {"name":"http_proxy", "value":"{{ $proxy.http }}"}
+        {{- if or $proxy.https $proxy.noProxy }},{{- end }}
+        {{- end }}
+        {{- if $proxy.https }}
+        {"name":"HTTPS_PROXY", "value":"{{ $proxy.https }}"},
+        {"name":"https_proxy", "value":"{{ $proxy.https }}"}
+        {{- if $proxy.noProxy }},{{- end }}
+        {{- end }}
+        {{- if $proxy.noProxy }}
+        {"name":"NO_PROXY", "value":variables.fullNoProxy},
+        {"name":"no_proxy", "value":variables.fullNoProxy}
+        {{- end }}
+        ]
+    - name: proxyEnvNames
+      expression: >-
+        variables.proxyEnv.map(e, e.name)
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: |-
+        object.kind == "Pod" ?
+        object.spec.containers.map(c, 
+          JSONPatch{
+            op: has(object.spec.containers[object.spec.containers.indexOf(c)].env) ? "replace" : "add",
+            path: "/spec/containers/" + string(object.spec.containers.indexOf(c)) + "/env",
+            value: c.?env.orValue([]).filter(e, !(e.name in variables.proxyEnvNames)) + variables.proxyEnv
+          }
+        ) : []
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: |-
+        object.kind == "Pod" ?
+        object.spec.?initContainers.orValue([]).map(c, 
+          JSONPatch{
+            op: has(object.spec.initContainers[object.spec.initContainers.indexOf(c)].env) ? "replace" : "add",
+            path: "/spec/initContainers/" + string(object.spec.initContainers.indexOf(c)) + "/env",
+            value: c.?env.orValue([]).filter(e, !(e.name in variables.proxyEnvNames)) + variables.proxyEnv
+          }
+        ) : []
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: |-
+        object.kind == "Pod" ?
+        object.spec.?ephemeralContainers.orValue([]).map(c, 
+          JSONPatch{
+            op: has(object.spec.ephemeralContainers[object.spec.ephemeralContainers.indexOf(c)].env) ? "replace" : "add",
+            path: "/spec/ephemeralContainers/" + string(object.spec.ephemeralContainers.indexOf(c)) + "/env",
+            value: c.?env.orValue([]).filter(e, !(e.name in variables.proxyEnvNames)) + variables.proxyEnv
+          }
+        ) : []
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: |-
+        object.kind in ["StatefulSet", "Deployment", "DaemonSet"] ?
+        object.spec.template.spec.containers.map(c, 
+          JSONPatch{
+            op: has(object.spec.template.spec.containers[object.spec.template.spec.containers.indexOf(c)].env) ? "replace" : "add",
+            path: "/spec/template/spec/containers/" + string(object.spec.template.spec.containers.indexOf(c)) + "/env",
+            value: c.?env.orValue([]).filter(e, !(e.name in variables.proxyEnvNames)) + variables.proxyEnv
+          }
+        ) : []
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: |-
+        object.kind in ["StatefulSet", "Deployment", "DaemonSet"] ?
+        object.spec.template.spec.?initContainers.orValue([]).map(c, 
+          JSONPatch{
+            op: has(object.spec.template.spec.initContainers[object.spec.template.spec.initContainers.indexOf(c)].env) ? "replace" : "add",
+            path: "/spec/template/spec/initContainers/" + string(object.spec.template.spec.initContainers.indexOf(c)) + "/env",
+            value: c.?env.orValue([]).filter(e, !(e.name in variables.proxyEnvNames)) + variables.proxyEnv
+          }
+        ) : []
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: |-
+        object.kind in ["StatefulSet", "Deployment", "DaemonSet"] ?
+        object.spec.template.spec.?ephemeralContainers.orValue([]).map(c, 
+          JSONPatch{
+            op: has(object.spec.template.spec.ephemeralContainers[object.spec.template.spec.ephemeralContainers.indexOf(c)].env) ? "replace" : "add",
+            path: "/spec/template/spec/ephemeralContainers/" + string(object.spec.template.spec.ephemeralContainers.indexOf(c)) + "/env",
+            value: c.?env.orValue([]).filter(e, !(e.name in variables.proxyEnvNames)) + variables.proxyEnv
+          }
+        ) : []
+---
+{{- end }}

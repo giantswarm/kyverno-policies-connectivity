@@ -93,6 +93,32 @@
                   "type": "string"
                 }
               },
+              "infraClusterResources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "apiVersions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "apiGroups": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "resources": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
               "controlPlaneIpRange": {
                 "type": "object",
                 "properties": {
@@ -169,6 +195,14 @@
                 }
               }
             }
-          }
+        },
+        "cel": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                }
+            }
+        }
     }
 }

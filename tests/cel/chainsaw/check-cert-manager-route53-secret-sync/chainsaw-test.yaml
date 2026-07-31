@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kyverno/chainsaw/main/.schemas/json/test-chainsaw-v1alpha1.json
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: check-cert-manager-route53-secret-sync
+spec:
+  steps:
+    - name: check-sync-cert-manager-route53-secret-policy-ready
+      description: Verify the sync-cert-manager-route53-secret ValidatingPolicy is ready
+      use:
+        template: ../_steps-templates/generating-policy-ready.yaml
+        with:
+          bindings:
+          - name: name
+            value: sync-cert-manager-route53-secret
+
+    - name: setup-source-secret
+      description: Create the source secret in the source namespace that will be cloned
+      try:
+        - apply:
+            file: source-secret.yaml
+
+    - name: clone-secret-to-target-namespace
+      description: Create a target namespace matching the pattern, which triggers secret clone
+      try:
+        - apply:
+            file: target-namespace.yaml
+        - sleep:
+            duration: 20s
+        - assert:
+            file: secret-sync-assert.yaml
+
+    - name: verify-secret-synchronization
+      description: Verify that changes to the source secret are reflected in the target
+      try:
+        - apply:
+            file: source-secret-update.yaml
+        - sleep:
+            duration: 20s
+        - assert:
+            file: secret-sync-update-assert.yaml
+      finally:
+        - delete:
+            file: source-secret-update.yaml
+        - delete:
+            file: target-namespace.yaml
+        - delete:
+            file: source-secret.yaml

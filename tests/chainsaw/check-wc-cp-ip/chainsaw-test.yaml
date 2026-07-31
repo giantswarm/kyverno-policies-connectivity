@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kyverno/chainsaw/main/.schemas/json/test-chainsaw-v1alpha1.json
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: check-wc-cp-ip
+spec:
+  steps:
+    - name: setup-kubeadm-config
+      description: Provide kubeadm ClusterConfiguration context used by the policy.
+      try:
+        - apply:
+            file: kubeadm-config.yaml
+
+    - name: setup-allowed-ips-configmap
+      description: Provide the list of allowed control plane IPs consumed by the policy.
+      try:
+        - apply:
+            file: wc-allowed-ips-cm.yaml
+
+    - name: allow-vspherecluster-with-allowed-ip
+      description: A matching VSphereCluster with an allowed IP should be admitted.
+      try:
+        - apply:
+            file: cluster-allowed-ip.yaml
+        - assert:
+            file: cluster-allowed-ip-assert.yaml
+      finally:
+        - delete:
+            file: cluster-allowed-ip.yaml
+
+    - name: exclude-vspherecluster-by-name
+      description: An excluded VSphereCluster name should bypass the IP check.
+      try:
+        - apply:
+            file: cluster-excluded-by-name.yaml
+        - assert:
+            file: cluster-excluded-by-name-assert.yaml
+      finally:
+        - delete:
+            file: cluster-excluded-by-name.yaml
+
+    - name: exclude-vspherecluster-by-annotation
+      description: A VSphereCluster with exclude annotation should bypass the IP check.
+      try:
+        - apply:
+            file: cluster-excluded-by-annotation.yaml
+        - assert:
+            file: cluster-excluded-by-annotation-assert.yaml
+      finally:
+        - delete:
+            file: cluster-excluded-by-annotation.yaml
+
+    - name: block-vspherecluster-with-blocked-ip
+      description: A matching VSphereCluster with a blocked IP should be denied.
+      try:
+        - apply:
+            file: cluster-blocked-ip.yaml
+            expect:
+              - check:
+                  ($error != null): true

@@ -23,6 +23,10 @@ wcIpCheck:
   validationFailureAction: Enforce  # or Audit
   infraClusterNames:  # don't put general CAPI Cluster here, ip to this CR should be assigned by the infra controller
   - "VSphereCluster"
+  infraClusterResources:
+  - apiGroups: ["infrastructure.cluster.x-k8s.io"]
+    apiVersions: ["*"]
+    resources: ["vsphereclusters"]
   # ipRanges:  # explicit IP range from which the IPs can be set to WC's control planes
   # - start: 10.10.222.242
   #   end: 10.10.222.249
@@ -41,3 +45,6 @@ wcIpCheck:
       registry: gsoci.azurecr.io
       name: giantswarm/kubectl
       tag: 1.26.0
+
+cel:
+  enabled: false

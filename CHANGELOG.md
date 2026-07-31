@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changes
+
+- New chart value `cel.enabled` to use new kyverno cel policy types
+
 ## [0.10.2] - 2026-05-11
 
 ### Fixed
