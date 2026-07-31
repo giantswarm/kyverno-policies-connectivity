@@ -25,7 +25,7 @@ wcIpCheck:
   - "VSphereCluster"
   infraClusterResources:
   - apiGroups: ["infrastructure.cluster.x-k8s.io"]
-    apiVersions: ["v1beta1"]
+    apiVersions: ["*"]
     resources: ["vsphereclusters"]
   # ipRanges:  # explicit IP range from which the IPs can be set to WC's control planes
   # - start: 10.10.222.242
