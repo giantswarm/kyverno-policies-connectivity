@@ -21,7 +21,7 @@ wcIpCheck:
   enabled: true
   infraClusterResources:
   - apiGroups: ["infrastructure.cluster.x-k8s.io"]
-    apiVersions: ["v1beta1"]
+    apiVersions: ["*"]
     resources: ["vsphereclusters"]
   exclude:
     names:
