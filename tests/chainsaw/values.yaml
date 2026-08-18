@@ -1,1 +1,12 @@
-# Placeholder for extra testing values
+# Values used to install the chart for the chainsaw tests (make install-policies).
+# The chart ships every policy disabled by default, so enable the ones the
+# tests assert on here.
+proxy:
+  enabled: true
+
+cluster:
+  name: chainsaw-test
+  proxy:
+    http: "http://proxy.example.com:3128"
+    https: "http://proxy.example.com:3128"
+    noProxy: "localhost,127.0.0.1,.cluster.local"
