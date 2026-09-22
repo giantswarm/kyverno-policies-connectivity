@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Chart metadata: add `io.giantswarm.application.audience` annotation (`all`).
+- Chart metadata: add `io.giantswarm.application.managed` annotation (`"true"`).
+- Chart metadata: add `keywords`.
+
 ## [0.10.2] - 2026-05-11
 
 ### Fixed
