@@ -18,11 +18,31 @@ There are only very few prerequisites for local testing:
 1. `make` has to be installed
 2. `kubectl` has to be installed
 3. `kind` has to be installed
-4. [chainsaw](https://kyverno.github.io/chainsaw/) has to be installed
+4. `helm` has to be installed
+5. `docker` has to be running for `kind`
+6. [chainsaw](https://kyverno.github.io/chainsaw/) has to be installed
 
 To only generate the policies in the `helm` folder structure:
 ```bash
 make generate
+```
+
+### Running tests
+
+Create a `kind` cluster, install Kyverno and the policies, then run the tests:
+```bash
+make kind-create install-kyverno install-extras install-policies
+chainsaw test ./tests/chainsaw
+```
+
+`make kind-create` creates a cluster named `chainsaw-kyverno-cluster` and switches your current `kubectl` context to it.
+The Kubernetes and Kyverno versions match CI. Override them with `KUBERNETES_VERSION` and `KYVERNO_VERSION`.
+
+After changing a policy, run `make generate install-policies` before running the tests again.
+
+Delete the cluster when you are done:
+```bash
+kind delete cluster --name chainsaw-kyverno-cluster
 ```
 
 ### Adding tests
