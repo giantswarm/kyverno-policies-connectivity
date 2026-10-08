@@ -1,8 +1,9 @@
 SHELL:=/usr/bin/env bash
 
-# Makefile.gen.chainsaw.mk defaults to the `kyverno-policies` chart, this repository ships
-# `kyverno-policies-connectivity`. Cluster name, Kubernetes and Kyverno versions come from the
-# generated defaults so local runs match CI.
+# Until the devctl chart-dir fix lands, Makefile.gen.chainsaw.mk installs the `kyverno-policies`
+# chart, and its `dabs` target builds helm/kyverno-policies, which this override cannot fix. Drop this
+# once the generated file takes the chart from helm/. Cluster name, Kubernetes and Kyverno versions
+# come from the generated defaults so local runs match CI.
 KYVERNO_POLICIES_APP_NAME ?= kyverno-policies-connectivity
 
 ##@ Generate
@@ -15,13 +16,3 @@ generate: ## Replace variables on Helm manifests.
 verify:
 	@$(MAKE) generate
 	git diff --exit-code
-
-##@ Test
-
-.PHONY: clean
-clean: ## Delete test manifests from kind cluster.
-	./hack/cleanup-local.sh
-
-.PHONY: tilt-up
-tilt-up: ## Start Tilt
-	tilt up

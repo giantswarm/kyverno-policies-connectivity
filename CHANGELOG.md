@@ -13,10 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Chart metadata: add `io.giantswarm.application.managed` annotation (`"true"`).
 - Chart metadata: add `keywords`.
 
-### Fixed
-
-- Local Chainsaw test runs: `make install-policies` installs the `kyverno-policies-connectivity` chart, and `make kind-create` uses the same Kubernetes version and cluster name as CI.
-
 ## [0.10.2] - 2026-05-11
 
 ### Fixed
