@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Chart metadata: add `io.giantswarm.application.managed` annotation (`"true"`).
 - Chart metadata: add `keywords`.
 
+### Fixed
+
+- Proxy: add `crossplane` to the injected `NO_PROXY`/`no_proxy` so Crossplane v2 core can reach its composition functions at `<function>.crossplane:9443` without going through the proxy.
+
 ## [0.10.2] - 2026-05-11
 
 ### Fixed

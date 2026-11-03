@@ -62,7 +62,7 @@ spec:
             value: {{`"{{apiEndpoint}},{{dnsDomain}},{{dnsDomainRoot}},{{podSubnet}},{{serviceSubnet}}"`}}
         - name: fullNoProxy
           variable:
-            value: {{ printf "\"%s,%s,%s\"" $proxy.noProxy "svc,127.0.0.1,localhost" "{{dynamicNoProxy}}" }}
+            value: {{ printf "\"%s,%s,%s\"" $proxy.noProxy "svc,127.0.0.1,localhost,crossplane" "{{dynamicNoProxy}}" }}
       mutate:
         patchStrategicMerge:
           spec:
