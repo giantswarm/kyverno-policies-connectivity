@@ -4,7 +4,7 @@ This repository contains Kyverno policies which Giant Swarm uses for managing co
 
 ## Repository structure
 
-We implement an app according to the [general Giant Swarm app platform](https://docs.giantswarm.io/app-platform/) which relies on Helm for application management.
+We implement an app according to the [general Giant Swarm app platform](https://docs.giantswarm.io/tutorials/fleet-management/app-platform/) which relies on Helm for application management.
 
 The `policies` folder contains the policies which are then escaped to be compliant with helm specific syntax.
 We use `[[` and  `]]` delimiters to handle cases where variables should be managed by helm.
