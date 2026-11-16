@@ -55,4 +55,3 @@ Tests are [Chainsaw](https://kyverno.github.io/chainsaw/) tests in [`tests/chain
 Each test has its own folder with a `chainsaw-test.yaml`.
 Reusable steps, like checking that a policy is ready, live in [`tests/chainsaw/_steps-templates`](tests/chainsaw/_steps-templates).
 See [`check-policy-ready`](tests/chainsaw/check-policy-ready/chainsaw-test.yaml) for an example.
-

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Prepare chart values and CI for devctl-generated CircleCI and strict values schema.
+
 ## [0.11.0] - 2026-11-03
 
 ### Added

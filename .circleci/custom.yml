@@ -1,0 +1,23 @@
+version: 2.1
+
+jobs:
+  verify:
+    docker:
+    - image: cimg/base:2026.11
+    steps:
+    - checkout
+    - run:
+        name: Install Make
+        command: |
+          sudo apt-get update && sudo apt-get install make
+    - run:
+        name: Make verify
+        command: make verify
+
+workflows:
+  build:
+    jobs:
+    - verify:
+        filters:
+          tags:
+            only: /^v.*/
