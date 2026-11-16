@@ -1,155 +1,180 @@
 {
-    "$schema": "http://json-schema.org/schema#",
-    "type": "object",
-    "properties": {
-        "certManager": {
-            "title": "CertManager",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$defs": {
+        "ip-range.json": {
             "type": "object",
+            "required": [
+                "start",
+                "end"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "end": {
+                    "type": "string"
+                },
+                "start": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "baseDomain": {
+            "type": "string"
+        },
+        "bootstrapMode": {
+            "type": "object",
+            "additionalProperties": true
+        },
+        "certManager": {
+            "type": "object",
+            "additionalProperties": false,
             "properties": {
                 "sourceNamespace": {
-                    "description": "Namespace containing source secret to sync to other namespaces",
-                    "title": "SourceNamespace",
                     "type": "string"
                 },
                 "syncSecret": {
-                    "description": "Should the policy to sync the Route53 secret be enabled?",
-                    "title": "SyncSecret",
                     "type": "boolean"
                 },
                 "targetNamespace": {
-                    "description": "Destinatinon namespace to sync the secret to",
-                    "title": "TargetNamespace",
                     "type": "string"
                 }
             }
         },
-        "cluster": {
-            "title": "Cluster",
+        "chartOperator": {
             "type": "object",
+            "additionalProperties": true
+        },
+        "ciliumNetworkPolicy": {
+            "type": "object",
+            "additionalProperties": true
+        },
+        "cluster": {
+            "type": "object",
+            "additionalProperties": true,
             "properties": {
                 "name": {
-                    "description": "The name of the installation",
-                    "title": "Name",
                     "type": "string"
                 },
                 "proxy": {
-                    "title": "Proxy related settings",
                     "type": "object",
+                    "additionalProperties": false,
                     "properties": {
                         "http": {
-                            "description": "URL of http proxy which should be injected to http_proxy env var",
-                            "title": "Http",
                             "type": "string"
                         },
                         "https": {
-                            "description": "URL of https proxy which should be injected to https_proxy env var",
-                            "title": "Https",
                             "type": "string"
                         },
                         "noProxy": {
-                            "description": "comma sepparated list of hosts or cidrs that should not be proxied, the no_proxy env var. Note: make sure to escape the comma with slash",
-                            "title": "No proxy",
                             "type": "string"
                         }
                     }
                 }
             }
         },
-        "proxy": {
-            "title": "Proxy",
-            "type": "object",
-            "properties": {
-                "enabled": {
-                    "description": "should the policy that inject proxy related env vars be enabled?",
-                    "title": "Enabled",
-                    "type": "boolean"
-                },
-                "http": {
-                    "description": "URL of http proxy, used when cluster.proxy.http is empty",
-                    "title": "Http",
-                    "type": "string"
-                },
-                "https": {
-                    "description": "URL of https proxy, used when cluster.proxy.https is empty",
-                    "title": "Https",
-                    "type": "string"
-                },
-                "noProxy": {
-                    "description": "comma separated list of hosts or cidrs that should not be proxied, used when cluster.proxy.noProxy is empty",
-                    "title": "No proxy",
-                    "type": "string"
-                }
-            }
+        "clusterCA": {
+            "type": "string"
+        },
+        "clusterCIDR": {
+            "type": "string"
+        },
+        "clusterDNSIP": {
+            "type": "string"
+        },
+        "clusterID": {
+            "type": "string"
         },
         "exclude": {
-            "title": "Exclude",
             "type": "object",
+            "additionalProperties": false,
             "properties": {
                 "names": {
-                    "description": "Array of strings containing names of k8s resources to exclude",
-                    "title": "Names",
-                    "type": "array"
-                }
-            }
-        },
-        "wcIpCheck": {
-            "type": "object",
-            "properties": {
-                "enabled": {
-                    "type": "boolean"
-                },
-                "validationFailureAction": {
-                    "type": "string",
-                    "enum": [
-                        "Audit",
-                        "Enforce"
-                    ]
-                },
-                "infraClusterNames": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "externalDNSIP": {
+            "type": "string"
+        },
+        "gcpProject": {
+            "type": "string"
+        },
+        "global": {
+            "type": [
+                "object",
+                "null"
+            ],
+            "description": "Global values shared between all subcharts and the platform.",
+            "additionalProperties": true,
+            "properties": {
+                "podSecurityStandards": {
+                    "type": "object",
+                    "additionalProperties": true
+                }
+            }
+        },
+        "helm": {
+            "type": "object",
+            "additionalProperties": true
+        },
+        "managementCluster": {
+            "type": "string"
+        },
+        "provider": {
+            "type": "string"
+        },
+        "proxy": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
                 },
-                "ipRanges": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "start": {
-                                "type": "string"
-                            },
-                            "end": {
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "start",
-                            "end"
-                        ]
-                    }
+                "http": {
+                    "type": "string"
                 },
+                "https": {
+                    "type": "string"
+                },
+                "noProxy": {
+                    "type": "string"
+                }
+            }
+        },
+        "subscriptionID": {
+            "type": "string"
+        },
+        "wcIpCheck": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
                 "deriveFromControlPlaneEndpoint": {
                     "type": "object",
+                    "additionalProperties": false,
                     "properties": {
                         "enabled": {
                             "type": "boolean"
                         },
-                        "offset": {
-                            "type": "integer"
-                        },
                         "number": {
                             "type": "integer"
+                        },
+                        "offset": {
+                            "type": "integer"
                         }
-                    },
-                    "required": [
-                        "enabled",
-                        "offset",
-                        "number"
-                    ]
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
                 },
                 "exclude": {
                     "type": "object",
+                    "additionalProperties": false,
                     "properties": {
                         "names": {
                             "type": "array",
@@ -159,11 +184,34 @@
                         }
                     }
                 },
+                "infraClusterNames": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "installJob": {
                     "type": "object",
+                    "additionalProperties": false,
                     "properties": {
+                        "kubectlImage": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "registry": {
+                                    "type": "string"
+                                },
+                                "tag": {
+                                    "type": "string"
+                                }
+                            }
+                        },
                         "securityContext": {
                             "type": "object",
+                            "additionalProperties": false,
                             "properties": {
                                 "runAsGroup": {
                                     "type": "integer"
@@ -172,22 +220,21 @@
                                     "type": "integer"
                                 }
                             }
-                        },
-                        "kubectlImage": {
-                            "type": "object",
-                            "properties": {
-                                "registry": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                },
-                                "tag": {
-                                    "type": "string"
-                                }
-                            }
                         }
                     }
+                },
+                "ipRanges": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/ip-range.json"
+                    }
+                },
+                "validationFailureAction": {
+                    "type": "string",
+                    "enum": [
+                        "Audit",
+                        "Enforce"
+                    ]
                 }
             }
         }
