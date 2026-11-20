@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Prepare chart values and CI for devctl-generated CircleCI and strict values schema.
 
+### Removed
+
+- Proxy: stop injecting proxy env vars into ephemeral (`kubectl debug`) containers. They are added through a pod update, which the policy no longer matches. Pass the variables with `kubectl debug --env` when a debug container needs the proxy.
+
+### Fixed
+
+- Proxy: limit `inject-proxy-env` to Pod `CREATE`. On UPDATE the policy re-injected env vars, and after a `NO_PROXY` change (e.g. 0.11.0) the API server rejected every label or annotation patch on pods created before the upgrade.
+
 ## [0.11.0] - 2026-11-03
 
 ### Added

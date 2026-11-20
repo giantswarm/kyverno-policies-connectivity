@@ -27,6 +27,10 @@ spec:
         - resources:
             kinds:
             - Pod
+            # Only on CREATE: the API server rejects env changes on a running pod, so a
+            # mutation on UPDATE (e.g. after a NO_PROXY change) fails every metadata patch.
+            operations:
+            - CREATE
 [[- if $proxy.namespaces ]]
           namespaces:
           [[- range $proxy.namespaces ]]
@@ -87,27 +91,6 @@ spec:
                     value: [[`"[[ fullNoProxy ]]"`]]
                   [[- end ]]
             initContainers:
-              - (name): "*"
-                env:
-                  [[- if $proxy.http ]]
-                  - name: HTTP_PROXY
-                    value: [[ $proxy.http ]]
-                  - name: http_proxy
-                    value: [[ $proxy.http ]]
-                  [[- end ]]
-                  [[- if $proxy.https ]]
-                  - name: HTTPS_PROXY
-                    value: [[ $proxy.https ]]
-                  - name: https_proxy
-                    value: [[ $proxy.https ]]
-                  [[- end ]]
-                  [[- if $proxy.noProxy ]]
-                  - name: NO_PROXY
-                    value: [[`"[[ fullNoProxy ]]"`]]
-                  - name: no_proxy
-                    value: [[`"[[ fullNoProxy ]]"`]]
-                  [[- end ]]
-            ephemeralContainers:
               - (name): "*"
                 env:
                   [[- if $proxy.http ]]
