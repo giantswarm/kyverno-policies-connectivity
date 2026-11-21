@@ -8,6 +8,9 @@ proxy:
   http: ""
   https: ""
   noProxy: ""
+  # Namespaces whose pods get the proxy env vars. Like the other proxy keys, an empty
+  # value falls back to cluster.proxy.namespaces; with both empty, all namespaces match.
+  namespaces: []  # @schema item: string
 
 cluster:
   name: ""
@@ -15,6 +18,7 @@ cluster:
     http: ""
     https: ""
     noProxy: ""
+    namespaces: []  # @schema item: string
 
 exclude:
   names:
