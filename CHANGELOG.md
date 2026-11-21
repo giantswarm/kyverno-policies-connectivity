@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Proxy: add `proxy.namespaces` and `cluster.proxy.namespaces` to the values and schema to limit `inject-proxy-env` to pods in those namespaces. An empty `proxy.namespaces` falls back to `cluster.proxy.namespaces`; with both empty (the default) the policy matches all namespaces.
+
+### Changed
+
+- Proxy: a `namespaces` value set before this release was rendered in the wrong place and ignored, so `inject-proxy-env` matched every namespace. It now applies, and pods outside the listed namespaces no longer get the proxy env vars. Check existing `proxy.namespaces` and `cluster.proxy.namespaces` values before upgrading.
+
+### Fixed
+
+- Proxy: render the `inject-proxy-env` namespace filter inside `match.all[].resources`. It sat next to `resources`, where the ClusterPolicy schema does not allow it.
+
 ## [0.11.1] - 2026-11-20
 
 ### Changed

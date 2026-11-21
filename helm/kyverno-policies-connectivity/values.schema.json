@@ -68,6 +68,12 @@
                         "https": {
                             "type": "string"
                         },
+                        "namespaces": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
                         "noProxy": {
                             "type": "string"
                         }
@@ -141,6 +147,12 @@
                 },
                 "https": {
                     "type": "string"
+                },
+                "namespaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "noProxy": {
                     "type": "string"

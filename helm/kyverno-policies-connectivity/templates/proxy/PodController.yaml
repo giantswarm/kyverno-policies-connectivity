@@ -33,10 +33,10 @@ spec:
             operations:
             - CREATE
 {{- if $proxy.namespaces }}
-          namespaces:
-          {{- range $proxy.namespaces }}
-            - {{ . | quote }}
-          {{- end }}
+            namespaces:
+            {{- range $proxy.namespaces }}
+              - {{ . | quote }}
+            {{- end }}
 {{- end }}
       context:
         - name: kubeadmConfig
