@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.2] - 2026-11-23
+
 ### Added
 
 - Proxy: add `proxy.namespaces` and `cluster.proxy.namespaces` to the values and schema to limit `inject-proxy-env` to pods in those namespaces. An empty `proxy.namespaces` falls back to `cluster.proxy.namespaces`; with both empty (the default) the policy matches all namespaces.
@@ -243,7 +245,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial policies moved from [`kyverno-policies`](https://github.com/giantswarm/kyverno-policies).
 
-[Unreleased]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.11.1...HEAD
+[Unreleased]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.11.2...HEAD
+[0.11.2]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.10.2...v0.11.0
 [0.10.2]: https://github.com/giantswarm/kyverno-policies-connectivity/compare/v0.10.1...v0.10.2
