@@ -3,7 +3,7 @@ proxy:
   namespaces: ["default", "kube-system", "kube-public"]
 
 cluster:
-  name: "chainsaw-test"
+  name: "test"
   proxy:
     http: "http://proxy.example.com:3128"
     https: "http://proxy.example.com:3128"
