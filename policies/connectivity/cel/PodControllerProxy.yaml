@@ -23,6 +23,7 @@ spec:
         apiVersions: ["v1"]
         operations: ["CREATE", "UPDATE"]
         resources: ["pods"]
+        operations: ["CREATE"]
   matchConditions:
     - name: exclude-name
       expression: >-
@@ -128,17 +129,6 @@ spec:
   - patchType: JSONPatch
     jsonPatch:
       expression: |-
-        object.kind == "Pod" ?
-        object.spec.?ephemeralContainers.orValue([]).map(c, 
-          JSONPatch{
-            op: has(object.spec.ephemeralContainers[object.spec.ephemeralContainers.indexOf(c)].env) ? "replace" : "add",
-            path: "/spec/ephemeralContainers/" + string(object.spec.ephemeralContainers.indexOf(c)) + "/env",
-            value: c.?env.orValue([]).filter(e, !(e.name in variables.proxyEnvNames)) + variables.proxyEnv
-          }
-        ) : []
-  - patchType: JSONPatch
-    jsonPatch:
-      expression: |-
         object.kind in ["StatefulSet", "Deployment", "DaemonSet"] ?
         object.spec.template.spec.containers.map(c, 
           JSONPatch{
@@ -155,17 +145,6 @@ spec:
           JSONPatch{
             op: has(object.spec.template.spec.initContainers[object.spec.template.spec.initContainers.indexOf(c)].env) ? "replace" : "add",
             path: "/spec/template/spec/initContainers/" + string(object.spec.template.spec.initContainers.indexOf(c)) + "/env",
-            value: c.?env.orValue([]).filter(e, !(e.name in variables.proxyEnvNames)) + variables.proxyEnv
-          }
-        ) : []
-  - patchType: JSONPatch
-    jsonPatch:
-      expression: |-
-        object.kind in ["StatefulSet", "Deployment", "DaemonSet"] ?
-        object.spec.template.spec.?ephemeralContainers.orValue([]).map(c, 
-          JSONPatch{
-            op: has(object.spec.template.spec.ephemeralContainers[object.spec.template.spec.ephemeralContainers.indexOf(c)].env) ? "replace" : "add",
-            path: "/spec/template/spec/ephemeralContainers/" + string(object.spec.template.spec.ephemeralContainers.indexOf(c)) + "/env",
             value: c.?env.orValue([]).filter(e, !(e.name in variables.proxyEnvNames)) + variables.proxyEnv
           }
         ) : []

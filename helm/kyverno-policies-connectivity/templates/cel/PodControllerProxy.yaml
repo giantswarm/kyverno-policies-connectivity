@@ -108,7 +108,7 @@ spec:
     jsonPatch:
       expression: |-
         object.kind == "Pod" ?
-        object.spec.containers.map(c, 
+        object.spec.containers.map(c,
           JSONPatch{
             op: has(object.spec.containers[object.spec.containers.indexOf(c)].env) ? "replace" : "add",
             path: "/spec/containers/" + string(object.spec.containers.indexOf(c)) + "/env",
@@ -119,7 +119,7 @@ spec:
     jsonPatch:
       expression: |-
         object.kind == "Pod" ?
-        object.spec.?initContainers.orValue([]).map(c, 
+        object.spec.?initContainers.orValue([]).map(c,
           JSONPatch{
             op: has(object.spec.initContainers[object.spec.initContainers.indexOf(c)].env) ? "replace" : "add",
             path: "/spec/initContainers/" + string(object.spec.initContainers.indexOf(c)) + "/env",
@@ -130,7 +130,7 @@ spec:
     jsonPatch:
       expression: |-
         object.kind == "Pod" ?
-        object.spec.?ephemeralContainers.orValue([]).map(c, 
+        object.spec.?ephemeralContainers.orValue([]).map(c,
           JSONPatch{
             op: has(object.spec.ephemeralContainers[object.spec.ephemeralContainers.indexOf(c)].env) ? "replace" : "add",
             path: "/spec/ephemeralContainers/" + string(object.spec.ephemeralContainers.indexOf(c)) + "/env",
@@ -141,7 +141,7 @@ spec:
     jsonPatch:
       expression: |-
         object.kind in ["StatefulSet", "Deployment", "DaemonSet"] ?
-        object.spec.template.spec.containers.map(c, 
+        object.spec.template.spec.containers.map(c,
           JSONPatch{
             op: has(object.spec.template.spec.containers[object.spec.template.spec.containers.indexOf(c)].env) ? "replace" : "add",
             path: "/spec/template/spec/containers/" + string(object.spec.template.spec.containers.indexOf(c)) + "/env",
@@ -152,7 +152,7 @@ spec:
     jsonPatch:
       expression: |-
         object.kind in ["StatefulSet", "Deployment", "DaemonSet"] ?
-        object.spec.template.spec.?initContainers.orValue([]).map(c, 
+        object.spec.template.spec.?initContainers.orValue([]).map(c,
           JSONPatch{
             op: has(object.spec.template.spec.initContainers[object.spec.template.spec.initContainers.indexOf(c)].env) ? "replace" : "add",
             path: "/spec/template/spec/initContainers/" + string(object.spec.template.spec.initContainers.indexOf(c)) + "/env",
@@ -163,7 +163,7 @@ spec:
     jsonPatch:
       expression: |-
         object.kind in ["StatefulSet", "Deployment", "DaemonSet"] ?
-        object.spec.template.spec.?ephemeralContainers.orValue([]).map(c, 
+        object.spec.template.spec.?ephemeralContainers.orValue([]).map(c,
           JSONPatch{
             op: has(object.spec.template.spec.ephemeralContainers[object.spec.template.spec.ephemeralContainers.indexOf(c)].env) ? "replace" : "add",
             path: "/spec/template/spec/ephemeralContainers/" + string(object.spec.template.spec.ephemeralContainers.indexOf(c)) + "/env",
