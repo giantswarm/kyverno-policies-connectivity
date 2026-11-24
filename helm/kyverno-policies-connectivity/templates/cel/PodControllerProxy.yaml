@@ -61,7 +61,7 @@ spec:
         variables.clusterConfiguration.networking.serviceSubnet
     - name: fullNoProxy
       expression: >-
-        "{{ $proxy.noProxy }},svc,127.0.0.1,localhost," +
+        "{{ $proxy.noProxy }},svc,127.0.0.1,localhost,crossplane,barman-cloud," +
         variables.apiEndpoint + "," +
         variables.dnsDomain + "," +
         variables.dnsDomainRoot + "," +

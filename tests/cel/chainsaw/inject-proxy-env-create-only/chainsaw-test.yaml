@@ -27,6 +27,7 @@ spec:
           kind: Pod
           metadata:
             name: proxy-env-injected
+            namespace: default
           spec:
             (containers[0].env[?name=='HTTP_PROXY'].value | [0]): http://proxy.example.com:3128
             (containers[0].env[?name=='NO_PROXY'] | length(@)): 1
