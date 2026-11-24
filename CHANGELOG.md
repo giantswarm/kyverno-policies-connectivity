@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Proxy: add `barman-cloud` to the injected `NO_PROXY`/`no_proxy` so the CloudNativePG operator reaches the barman-cloud plugin at `barman-cloud:9090` without going through the proxy.
+
 ## [0.11.2] - 2026-11-23
 
 ### Added
