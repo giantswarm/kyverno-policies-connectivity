@@ -8,10 +8,14 @@ spec:
   - name: test-container
     env:
     - name: HTTP_PROXY
-      value: http://proxy.example.com:8080
+      value: http://proxy.example.com:3128
     - name: http_proxy
-      value: http://proxy.example.com:8080
+      value: http://proxy.example.com:3128
     - name: HTTPS_PROXY
-      value: https://proxy.example.com:8080
+      value: http://proxy.example.com:3128
     - name: https_proxy
-      value: https://proxy.example.com:8080
+      value: http://proxy.example.com:3128
+    - name: NO_PROXY
+      value: localhost,127.0.0.1,.cluster.local,svc,127.0.0.1,localhost,crossplane,barman-cloud,10.0.0.1,cluster.local,cluster.local.,10.244.0.0/16,10.96.0.0/12
+    - name: no_proxy
+      value: localhost,127.0.0.1,.cluster.local,svc,127.0.0.1,localhost,crossplane,barman-cloud,10.0.0.1,cluster.local,cluster.local.,10.244.0.0/16,10.96.0.0/12
