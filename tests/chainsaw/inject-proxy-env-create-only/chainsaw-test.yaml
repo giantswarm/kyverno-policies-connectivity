@@ -23,6 +23,7 @@ spec:
           kind: Pod
           metadata:
             name: proxy-env-injected
+            namespace: default
           spec:
             containers:
             - name: pause
@@ -33,6 +34,7 @@ spec:
           kind: Pod
           metadata:
             name: proxy-env-injected
+            namespace: default
           spec:
             (containers[0].env[?name=='HTTP_PROXY'].value | [0]): http://proxy.example.com:3128
             (containers[0].env[?name=='NO_PROXY'] | length(@)): 1
@@ -45,6 +47,7 @@ spec:
           kind: Pod
           metadata:
             name: proxy-env-update
+            namespace: default
             annotations:
               policies.kyverno.io/inject-proxy-env: exclude
           spec:
@@ -59,6 +62,7 @@ spec:
           kind: Pod
           metadata:
             name: proxy-env-update
+            namespace: default
             annotations:
               policies.kyverno.io/inject-proxy-env: include
             labels:
@@ -69,6 +73,7 @@ spec:
           kind: Pod
           metadata:
             name: proxy-env-update
+            namespace: default
             labels:
               test: update
           spec:
