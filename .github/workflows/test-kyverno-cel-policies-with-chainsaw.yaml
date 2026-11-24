@@ -36,12 +36,12 @@ jobs:
       - name: Install Make
         run: |
           sudo apt-get update && sudo apt-get install make
-      - name: Install kyverno
-        run: |
-          make kind-get-kubeconfig install-kyverno
       - name: Install extra resources
         run: |
           make install-extras
+      - name: Install kyverno
+        run: |
+          make kind-get-kubeconfig install-kyverno
       - name: Install Kyverno CEL Policies
         run: |
           make install-cel-policies
