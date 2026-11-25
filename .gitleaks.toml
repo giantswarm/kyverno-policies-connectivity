@@ -1,0 +1,12 @@
+title = "gitleaks config"
+
+# Keep all default gitleaks rules.
+[extend]
+useDefault = true
+
+# Test fixtures contain dummy credentials that are not real secrets.
+[allowlist]
+description = "Ignore test fixtures"
+paths = [
+  '''^tests/''',
+]
