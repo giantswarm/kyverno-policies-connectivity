@@ -28,6 +28,15 @@
             "type": "object",
             "additionalProperties": true
         },
+        "cel": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                }
+            }
+        },
         "certManager": {
             "type": "object",
             "additionalProperties": false,
@@ -200,6 +209,33 @@
                     "type": "array",
                     "items": {
                         "type": "string"
+                    }
+                },
+                "infraClusterResources": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "apiGroups": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "apiVersions": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "resources": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
                     }
                 },
                 "installJob": {

@@ -55,6 +55,11 @@ install-policies: check-kyverno-policies-chart
 	touch tests/chainsaw/values.yaml
 	helm upgrade --install $(KYVERNO_POLICIES_APP_NAME) $(KYVERNO_POLICIES_CHART_DIR) --values ./tests/chainsaw/values.yaml
 
+.PHONY: install-cel-policies
+install-cel-policies: check-kyverno-policies-chart
+	touch tests/cel/chainsaw/values.yaml
+	helm upgrade --install $(KYVERNO_POLICIES_APP_NAME) $(KYVERNO_POLICIES_CHART_DIR) --values ./tests/cel/chainsaw/values.yaml
+
 .PHONY: install-extras
 install-extras:
 	hack/chainsaw-extra-resources.sh

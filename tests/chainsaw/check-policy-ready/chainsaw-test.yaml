@@ -5,10 +5,26 @@ metadata:
   name: check-policy-is-ready
 spec:
   steps:
-  - name: check if inject-proxy-env is ready
+  - name: check-sync-cert-manager-route53-secret
+    use:
+      template: ../_steps-templates/cluster-policy-ready.yaml
+      with:
+        bindings:
+        - name: name
+          value: sync-cert-manager-route53-secret
+
+  - name: check-inject-proxy-env
     use:
       template: ../_steps-templates/cluster-policy-ready.yaml
       with:
         bindings:
         - name: name
           value: inject-proxy-env
+
+  - name: check-kyverno-policies-connectivity-check-wc-cp-ip
+    use:
+      template: ../_steps-templates/cluster-policy-ready.yaml
+      with:
+        bindings:
+        - name: name
+          value: kyverno-policies-connectivity-check-wc-cp-ip

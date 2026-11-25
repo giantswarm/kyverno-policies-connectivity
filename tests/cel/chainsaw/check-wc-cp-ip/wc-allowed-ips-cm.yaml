@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kyverno-policies-connectivity-wc-allowed-ips
+  namespace: default
+data:
+  allowed-ips: |
+    - "10.0.0.42"

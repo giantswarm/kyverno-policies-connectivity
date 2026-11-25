@@ -1,0 +1,73 @@
+# inject-proxy-env mutates pods on CREATE only. Container env is immutable once a
+# pod exists, so a mutation on UPDATE makes the API server reject every update
+# to a pod whose env differs from what the policy would inject.
+# https://github.com/giantswarm/giantswarm/issues/38998
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: inject-proxy-env-create-only
+spec:
+  steps:
+  - name: inject proxy env on pod create
+    try:
+    - create:
+        resource:
+          apiVersion: v1
+          kind: Pod
+          metadata:
+            name: proxy-env-injected
+            namespace: default
+          spec:
+            containers:
+            - name: pause
+              image: registry.k8s.io/pause:3.10
+    - assert:
+        resource:
+          apiVersion: v1
+          kind: Pod
+          metadata:
+            name: proxy-env-injected
+            namespace: default
+          spec:
+            (containers[0].env[?name=='HTTP_PROXY'].value | [0]): http://proxy.example.com:3128
+            (containers[0].env[?name=='NO_PROXY'] | length(@)): 1
+  - name: leave pods alone on update
+    try:
+    # Created while excluded, so the pod carries no proxy env.
+    - create:
+        resource:
+          apiVersion: v1
+          kind: Pod
+          metadata:
+            name: proxy-env-update
+            namespace: default
+            annotations:
+              policies.kyverno.io/inject-proxy-env: exclude
+          spec:
+            containers:
+            - name: pause
+              image: registry.k8s.io/pause:3.10
+    # Lift the exclusion and add a label. If the policy matched UPDATE, it would
+    # add env to the existing container and the API server would reject the patch.
+    - patch:
+        resource:
+          apiVersion: v1
+          kind: Pod
+          metadata:
+            name: proxy-env-update
+            namespace: default
+            annotations:
+              policies.kyverno.io/inject-proxy-env: include
+            labels:
+              test: update
+    - assert:
+        resource:
+          apiVersion: v1
+          kind: Pod
+          metadata:
+            name: proxy-env-update
+            namespace: default
+            labels:
+              test: update
+          spec:
+            (containers[0].env == null): true

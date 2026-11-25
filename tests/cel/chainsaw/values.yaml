@@ -1,0 +1,30 @@
+proxy:
+  enabled: true
+  namespaces: ["default", "kube-system", "kube-public"]
+
+cluster:
+  name: "test"
+  proxy:
+    http: "http://proxy.example.com:3128"
+    https: "http://proxy.example.com:3128"
+    noProxy: "localhost,127.0.0.1,.cluster.local"
+
+certManager:
+  syncSecret: true
+  sourceNamespace: "default"
+  targetNamespace: "org-*"
+
+cel:
+  enabled: true
+
+wcIpCheck:
+  enabled: true
+  infraClusterResources:
+  - apiGroups: ["infrastructure.cluster.x-k8s.io"]
+    apiVersions: ["v1beta1"]
+    resources: ["vsphereclusters"]
+  exclude:
+    names:
+    - excluded-by-name
+  deriveFromControlPlaneEndpoint:
+    enabled: true
